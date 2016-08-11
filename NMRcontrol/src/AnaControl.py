@@ -52,12 +52,14 @@ class myControl(object):
         for myline in self.ParFile:  # iterate over the lines
             tempbuf = myline.split()    # split at one white space and slit at the most once
             outfil.write(myline)
+            print tempbuf[0], tempbuf[1]
             self.ParList[tempbuf[0]] = tempbuf[1]
             
         outfil.close()  # now we are safe, the backup is closed
          
         # loop over dictionary
-        
+        print "ANa control", self.ParList
+        return self.ParList
     
         
     def WriteParameterFile(self):
@@ -65,10 +67,14 @@ class myControl(object):
         
         # delete old file by truncating it to 0
         self.ParFile.truncate(0)
+        self.ParFile.close()  # have to do this otherwise we have starnge chracters in the file
+        self.ParFile = open(self.ParameterFile,'w')  # read and write
+        
         
         
         for k in self.ParList:
-            templine =k+'     '+self.ParList[k]
+            templine =k+'     '+self.ParList[k]+'\n'
+            print k, templine
             self.ParFile.write(templine)
             
     def CreateNMRAna(self):
@@ -96,7 +102,7 @@ if __name__ == '__main__':
     
     # now pass control over to root
     
-    myANA = NMR.NMR()
-    print myC.NMRcommand
-    myANA.Analyzer("/Users/klein/git/NMRanalyzer/Debug/NMRana",myC.NMRcommand)
-    pass
+    #myANA = NMR.NMR()
+    #print myC.NMRcommand
+    #myANA.Analyzer("/Users/klein/git/NMRanalyzer/Debug/NMRana",myC.NMRcommand)
+    #pass

@@ -4,21 +4,157 @@ Created on Aug 9, 2016
 @author: klein
 '''
 import wx
+import AnaControl as ANA
 #import images
 
 class ParameterFrame(wx.Frame):
-    def __init__ (self,parent,id,title):
+    def __init__ (self,parent,id,title,parameter_list):
+        """ creates the parameters, parameter list is what is contained in parameter file"""
         print "Parameter Frame init"
         wx.Frame.__init__(self,parent,id,title,(300,300),(600,400),style = wx.DEFAULT_FRAME_STYLE)
-        panel = wx.Panel(self)
-        panel.SetBackgroundColour('Pink')
+        self.panel = wx.Panel(self)
+        self.panel.SetBackgroundColour('Pink')
+        self.parameter_list = parameter_list
+        
+
+
+
+
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, wx.ART_OTHER, (16, 16))
+        titleIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
+        title = wx.StaticText(self.panel, wx.ID_ANY, 'Parameters')
+
+        
+        self.MyIcon = []
+        self.MyLabel = []
+        self.MyInput = []
+        for k in self.parameter_list:
+            self.MyLabel.append(k)
+            self.MyInput.append(self.parameter_list[k])
+        print "Parameter frame" , self.parameter_list
+ 
+        bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
+        #self.CreateFields()
+        inputOneIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
+        labelOne = wx.StaticText(self.panel, wx.ID_ANY, 'Input 1')
+        inputTxtOne = wx.TextCtrl(self.panel, wx.ID_ANY, '',style = wx.TE_PROCESS_ENTER)
+        #the lamda methos is used to pass arguments to bind
+        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtOne),inputTxtOne)
+        print "after check",inputTxtOne.GetValue()
+        
+            
+        inputTwoIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
+        labelTwo = wx.StaticText(self.panel, wx.ID_ANY, 'Input 2')
+        inputTxtTwo = wx.TextCtrl(self.panel, wx.ID_ANY,'')
+
+        inputThreeIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
+        labelThree = wx.StaticText(self.panel, wx.ID_ANY, 'Input 3')
+        inputTxtThree = wx.TextCtrl(self.panel, wx.ID_ANY, '')
+
+        inputFourIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
+        labelFour = wx.StaticText(self.panel, wx.ID_ANY, 'Input 4')
+        inputTxtFour = wx.TextCtrl(self.panel, wx.ID_ANY, '')
+
+        okBtn = wx.Button(self.panel, wx.ID_ANY, 'OK')
+        cancelBtn = wx.Button(self.panel, wx.ID_ANY, 'Cancel')
+        self.Bind(wx.EVT_BUTTON, self.onOK, okBtn)
+        self.Bind(wx.EVT_BUTTON, self.onCancel, cancelBtn)
+
+        topSizer        = wx.BoxSizer(wx.VERTICAL)
+        titleSizer      = wx.BoxSizer(wx.HORIZONTAL)
+        inputOneSizer   = wx.BoxSizer(wx.HORIZONTAL)
+        inputTwoSizer   = wx.BoxSizer(wx.HORIZONTAL)
+        inputThreeSizer = wx.BoxSizer(wx.HORIZONTAL)
+        inputFourSizer  = wx.BoxSizer(wx.HORIZONTAL)
+        btnSizer        = wx.BoxSizer(wx.HORIZONTAL)
+
+        titleSizer.Add(titleIco, 0, wx.ALL, 5)
+        titleSizer.Add(title, 0, wx.ALL, 5)
+
+        inputOneSizer.Add(inputOneIco, 0, wx.ALL, 5)
+        inputOneSizer.Add(labelOne, 0, wx.ALL, 5)
+
+        inputOneSizer.Add(inputTxtOne, 1, wx.ALL|wx.EXPAND, 5)
+
+        inputTwoSizer.Add(inputTwoIco, 0, wx.ALL, 5)
+        inputTwoSizer.Add(labelTwo, 0, wx.ALL, 5)
+        inputTwoSizer.Add(inputTxtTwo, 1, wx.ALL|wx.EXPAND, 5)
+
+        inputThreeSizer.Add(inputThreeIco, 0, wx.ALL, 5)
+        inputThreeSizer.Add(labelThree, 0, wx.ALL, 5)
+        inputThreeSizer.Add(inputTxtThree, 1, wx.ALL|wx.EXPAND, 5)
+
+        inputFourSizer.Add(inputFourIco, 0, wx.ALL, 5)
+        inputFourSizer.Add(labelFour, 0, wx.ALL, 5)
+        inputFourSizer.Add(inputTxtFour, 1, wx.ALL|wx.EXPAND, 5)
+
+        btnSizer.Add(okBtn, 0, wx.ALL, 5)
+        btnSizer.Add(cancelBtn, 0, wx.ALL, 5)
+
+        topSizer.Add(titleSizer, 0, wx.CENTER)
+        topSizer.Add(wx.StaticLine(self.panel,), 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(inputOneSizer, 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(inputTwoSizer, 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(inputThreeSizer, 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(inputFourSizer, 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(wx.StaticLine(self.panel), 0, wx.ALL|wx.EXPAND, 5)
+        topSizer.Add(btnSizer, 0, wx.ALL|wx.CENTER, 5)
+
+        self.panel.SetSizer(topSizer)
+        topSizer.Fit(self)
+
+
+    def onOK(self, event):
+        # Do something
+        print 'onOK handler'
+
+    def onCancel(self, event):
+        self.closeProgram()
+
+    def closeProgram(self):
+        self.Close()
+        
+        
+    def CreateFields(self): 
+        """ this creates the input fields"""
+        #make a list of keys and numbers
+        atemp=[]
+        for k in self.parameter_list:
+            atemp.append(k)
+        for m in range(0,3):
+            bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
+            self.MyIcon.append(wx.StaticBitmap(self.panel, wx.ID_ANY, bmp))
+            self.MyLabel.append(wx.StaticText(self.panel, wx.ID_ANY, atemp[m]))
+            self.MyInputTxT.append(wx.TextCtrl(self.panel, wx.ID_ANY,self.parameter_list[atemp[m]] ,style = wx.TE_PROCESS_ENTER, ))
+        # the lamda methos is used to pass arguments to bind
+            print self.MyInput[m]
+            self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,self.MyInput[m]),self.MyInput[m])
+        print "after check",self.inputTxtOne.GetValue()
+           
+        
+    def onAction(self, event, argument):
+        """
+        check for numeric entry and limit to 2 decimals
+        accepted result is in self.value
+        """
+        print "onAction"
+        raw_value = argument.GetValue().strip()
+        # numeric check
+        if all(x in '0123456789.+-' for x in raw_value):
+            # convert to float and limit to 2 decimals
+            self.value = round(float(raw_value), 2)
+            argument.ChangeValue(str(self.value))
+        else:
+            argument.ChangeValue("Number only")
+            
+        #argument.SetValue("5.3")
         
         
 
 
 class MyFrame(wx.Frame):
     """ This is the main control frame """
-    def __init__ (self,parent,id,title):
+    def __init__ (self,parent,id,title,parlist):
         print "Frame init"
         wx.Frame.__init__(self,parent,id,title,(100,100),(600,400),style = wx.DEFAULT_FRAME_STYLE)
         
@@ -26,6 +162,8 @@ class MyFrame(wx.Frame):
         panel.SetBackgroundColour('Blue')
         statusBar = self.CreateStatusBar()
         toolbar = self.CreateToolBar()
+        self.ParList = parlist
+        #self.ParList = ParList
         
         
        #toolbar.AddSimpleTool(wx.NewId(), images.getNewBitmap(),"New","long help for 'New'")
@@ -66,7 +204,7 @@ class MyFrame(wx.Frame):
         the user can then change the values of these parameters. Once this is finished
         the parameters are save to file and the loop is exited"""
         
-        self.MyParFrame = ParameterFrame(parent=None,id = -1,title= "Set Parameters")  # open a parameter frame
+        self.MyParFrame = ParameterFrame(parent=None,id = -1,title= "Set Parameters",parameter_list =self.ParList)  # open a parameter frame
         self.MyParFrame.Show()
         
         
@@ -84,17 +222,27 @@ class MyGUIapp(wx.App):
     """ master subclass"""
     def __init__(self,redirect=True, filename=None):
         wx.App.__init__(self,redirect,filename)
-        
+       
     def OnInit(self):
         """ initializes the application"""
-        self.frame = MyFrame(parent=None,id = -1,title= "NMR control")
+                # instantitae ANA
+        myC = ANA.myControl()
+        self.ParList = myC.ReadParameterFile()
+        print "Gui", self.ParList
+        
+        
+        #myC.WriteParameterFile()
+        #myC.CreateNMRAna()
+        #myC.Cleanup()
+
+        self.frame = MyFrame(parent=None,id = -1,title= "NMR control",parlist = self.ParList)
         self.frame.Show()
         # make this the topwindow
         self.SetTopWindow(self.frame)
         print "I am in OnInit"
         # temporarya dialog
 
-        
+  
         
         
         dlg = wx.MessageDialog(None,'Continue','Dialog',wx.YES_NO |wx.ICON_QUESTION)
