@@ -35,15 +35,18 @@ class ParameterFrame(wx.Frame):
  
         bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
         #self.CreateFields()
-        labelOne = wx.StaticText(self.panel, wx.ID_ANY, 'Input 1')
-        inputTxtOne = wx.TextCtrl(self.panel, wx.ID_ANY, '',style = wx.TE_PROCESS_ENTER)
+        labelOne = wx.StaticText(self.panel, wx.ID_ANY, self.MyLabel[0])
+        inputTxtOne = wx.TextCtrl(self.panel, wx.ID_ANY, self.MyInput[0],style = wx.TE_PROCESS_ENTER)
         #the lamda methos is used to pass arguments to bind
-        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtOne),inputTxtOne)
+        arg2 ='test1'
+        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtOne,arg2),inputTxtOne)
         print "after check",inputTxtOne.GetValue()
         
             
         labelTwo = wx.StaticText(self.panel, wx.ID_ANY, 'Input 2')
-        inputTxtTwo = wx.TextCtrl(self.panel, wx.ID_ANY,'')
+        inputTxtTwo = wx.TextCtrl(self.panel, wx.ID_ANY,'',style = wx.TE_PROCESS_ENTER)
+        arg3 = 'test2'
+        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtTwo,arg3),inputTxtTwo)
 
         labelThree = wx.StaticText(self.panel, wx.ID_ANY, 'Input 3')
         inputTxtThree = wx.TextCtrl(self.panel, wx.ID_ANY, '')
@@ -124,12 +127,12 @@ class ParameterFrame(wx.Frame):
         print "after check",self.inputTxtOne.GetValue()
            
         
-    def onAction(self, event, argument):
+    def onAction(self, event, argument,arg2):
         """
         check for numeric entry and limit to 2 decimals
         accepted result is in self.value
         """
-        print "onAction"
+        print "onAction",arg2
         raw_value = argument.GetValue().strip()
         # numeric check
         if all(x in '0123456789.+-' for x in raw_value):
