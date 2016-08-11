@@ -26,6 +26,8 @@ class ParameterFrame(wx.Frame):
 
         
         self.MyIcon = []
+        self.MyLabelArray = []
+        self.MyInputArray = []
         self.MyLabel = []
         self.MyInput = []
         for k in self.parameter_list:
@@ -34,25 +36,14 @@ class ParameterFrame(wx.Frame):
         print "Parameter frame" , self.parameter_list
  
         bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
-        #self.CreateFields()
-        labelOne = wx.StaticText(self.panel, wx.ID_ANY, self.MyLabel[0])
-        inputTxtOne = wx.TextCtrl(self.panel, wx.ID_ANY, self.MyInput[0],style = wx.TE_PROCESS_ENTER)
-        #the lamda methos is used to pass arguments to bind
-        arg2 ='test1'
-        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtOne,arg2),inputTxtOne)
-        print "after check",inputTxtOne.GetValue()
-        
-            
-        labelTwo = wx.StaticText(self.panel, wx.ID_ANY, 'Input 2')
-        inputTxtTwo = wx.TextCtrl(self.panel, wx.ID_ANY,'',style = wx.TE_PROCESS_ENTER)
-        arg3 = 'test2'
-        self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,inputTxtTwo,arg3),inputTxtTwo)
-
-        labelThree = wx.StaticText(self.panel, wx.ID_ANY, 'Input 3')
-        inputTxtThree = wx.TextCtrl(self.panel, wx.ID_ANY, '')
-
-        labelFour = wx.StaticText(self.panel, wx.ID_ANY, 'Input 4')
-        inputTxtFour = wx.TextCtrl(self.panel, wx.ID_ANY, '')
+        self.counter =0 
+        for k in self.parameter_list:
+            print k
+#            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
+            self.MyLabelArray.append(wx.TextCtrl(self.panel, wx.ID_ANY, k,style = wx.TE_READONLY))  # put the variable name from the key
+            self.MyInputArray.append(wx.TextCtrl(self.panel, wx.ID_ANY, self.parameter_list[k],style = wx.TE_PROCESS_ENTER))
+            self.counter = self.counter+1
+         
 
         okBtn = wx.Button(self.panel, wx.ID_ANY, 'OK')
         cancelBtn = wx.Button(self.panel, wx.ID_ANY, 'Cancel')
@@ -61,37 +52,29 @@ class ParameterFrame(wx.Frame):
 
         topSizer        = wx.BoxSizer(wx.VERTICAL)
         titleSizer      = wx.BoxSizer(wx.HORIZONTAL)
-        inputOneSizer   = wx.BoxSizer(wx.HORIZONTAL)
-        inputTwoSizer   = wx.BoxSizer(wx.HORIZONTAL)
-        inputThreeSizer = wx.BoxSizer(wx.HORIZONTAL)
-        inputFourSizer  = wx.BoxSizer(wx.HORIZONTAL)
+        # create array of sizer box
+        SizerBox =[]
+        for l in range(0,self.counter):
+            SizerBox.append(wx.BoxSizer(wx.HORIZONTAL))
         btnSizer        = wx.BoxSizer(wx.HORIZONTAL)
 
         titleSizer.Add(titleIco, 0, wx.ALL, 5)
         titleSizer.Add(title, 0, wx.ALL, 5)
+        
+        for l in range(0,self.counter):
+            SizerBox[l].Add(self.MyLabelArray[l], 0, wx.ALL, 5)
+            SizerBox[l].Add(self.MyInputArray[l], 1, wx.ALL|wx.EXPAND, 5)
+        
 
-        inputOneSizer.Add(labelOne, 0, wx.ALL, 5)
-
-        inputOneSizer.Add(inputTxtOne, 1, wx.ALL|wx.EXPAND, 5)
-
-        inputTwoSizer.Add(labelTwo, 0, wx.ALL, 5)
-        inputTwoSizer.Add(inputTxtTwo, 1, wx.ALL|wx.EXPAND, 5)
-
-        inputThreeSizer.Add(labelThree, 0, wx.ALL, 5)
-        inputThreeSizer.Add(inputTxtThree, 1, wx.ALL|wx.EXPAND, 5)
-
-        inputFourSizer.Add(labelFour, 0, wx.ALL, 5)
-        inputFourSizer.Add(inputTxtFour, 1, wx.ALL|wx.EXPAND, 5)
 
         btnSizer.Add(okBtn, 0, wx.ALL, 5)
         btnSizer.Add(cancelBtn, 0, wx.ALL, 5)
 
         topSizer.Add(titleSizer, 0, wx.CENTER)
         topSizer.Add(wx.StaticLine(self.panel,), 0, wx.ALL|wx.EXPAND, 5)
-        topSizer.Add(inputOneSizer, 0, wx.ALL|wx.EXPAND, 5)
-        topSizer.Add(inputTwoSizer, 0, wx.ALL|wx.EXPAND, 5)
-        topSizer.Add(inputThreeSizer, 0, wx.ALL|wx.EXPAND, 5)
-        topSizer.Add(inputFourSizer, 0, wx.ALL|wx.EXPAND, 5)
+        for l in range(0,self.counter):
+            topSizer.Add(SizerBox[l], 0, wx.ALL|wx.EXPAND, 5)
+
         topSizer.Add(wx.StaticLine(self.panel), 0, wx.ALL|wx.EXPAND, 5)
         topSizer.Add(btnSizer, 0, wx.ALL|wx.CENTER, 5)
 
@@ -101,31 +84,23 @@ class ParameterFrame(wx.Frame):
 
     def onOK(self, event):
         # Do something
+        # we need to create the parameter list again:
+        
+        for l in range(0,self.counter):
+            #print self.MyLabelArray[l].GetValue(),self.MyInputArray[l].GetValue()
+            self.parameter_list[self.MyLabelArray[l].GetValue()] = self.MyInputArray[l].GetValue()
         print 'onOK handler'
+        #print self.parameter_list
+        return self.parameter_list
 
     def onCancel(self, event):
-        self.closeProgram()
+        return 0
 
     def closeProgram(self):
         self.Close()
         
         
-    def CreateFields(self): 
-        """ this creates the input fields"""
-        #make a list of keys and numbers
-        atemp=[]
-        for k in self.parameter_list:
-            atemp.append(k)
-        for m in range(0,3):
-            bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
-            self.MyIcon.append(wx.StaticBitmap(self.panel, wx.ID_ANY, bmp))
-            self.MyLabel.append(wx.StaticText(self.panel, wx.ID_ANY, atemp[m]))
-            self.MyInputTxT.append(wx.TextCtrl(self.panel, wx.ID_ANY,self.parameter_list[atemp[m]] ,style = wx.TE_PROCESS_ENTER, ))
-        # the lamda methos is used to pass arguments to bind
-            print self.MyInput[m]
-            self.Bind(wx.EVT_TEXT_ENTER, lambda event: self.onAction(event,self.MyInput[m]),self.MyInput[m])
-        print "after check",self.inputTxtOne.GetValue()
-           
+         
         
     def onAction(self, event, argument,arg2):
         """
@@ -134,6 +109,7 @@ class ParameterFrame(wx.Frame):
         """
         print "onAction",arg2
         raw_value = argument.GetValue().strip()
+        print raw_value,arg2
         # numeric check
         if all(x in '0123456789.+-' for x in raw_value):
             # convert to float and limit to 2 decimals
