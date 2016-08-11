@@ -35,7 +35,6 @@ class ParameterFrame(wx.Frame):
  
         bmp = wx.ArtProvider.GetBitmap(wx.ART_TIP, wx.ART_OTHER, (16, 16))
         #self.CreateFields()
-        inputOneIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
         labelOne = wx.StaticText(self.panel, wx.ID_ANY, 'Input 1')
         inputTxtOne = wx.TextCtrl(self.panel, wx.ID_ANY, '',style = wx.TE_PROCESS_ENTER)
         #the lamda methos is used to pass arguments to bind
@@ -43,15 +42,12 @@ class ParameterFrame(wx.Frame):
         print "after check",inputTxtOne.GetValue()
         
             
-        inputTwoIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
         labelTwo = wx.StaticText(self.panel, wx.ID_ANY, 'Input 2')
         inputTxtTwo = wx.TextCtrl(self.panel, wx.ID_ANY,'')
 
-        inputThreeIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
         labelThree = wx.StaticText(self.panel, wx.ID_ANY, 'Input 3')
         inputTxtThree = wx.TextCtrl(self.panel, wx.ID_ANY, '')
 
-        inputFourIco = wx.StaticBitmap(self.panel, wx.ID_ANY, bmp)
         labelFour = wx.StaticText(self.panel, wx.ID_ANY, 'Input 4')
         inputTxtFour = wx.TextCtrl(self.panel, wx.ID_ANY, '')
 
@@ -71,20 +67,16 @@ class ParameterFrame(wx.Frame):
         titleSizer.Add(titleIco, 0, wx.ALL, 5)
         titleSizer.Add(title, 0, wx.ALL, 5)
 
-        inputOneSizer.Add(inputOneIco, 0, wx.ALL, 5)
         inputOneSizer.Add(labelOne, 0, wx.ALL, 5)
 
         inputOneSizer.Add(inputTxtOne, 1, wx.ALL|wx.EXPAND, 5)
 
-        inputTwoSizer.Add(inputTwoIco, 0, wx.ALL, 5)
         inputTwoSizer.Add(labelTwo, 0, wx.ALL, 5)
         inputTwoSizer.Add(inputTxtTwo, 1, wx.ALL|wx.EXPAND, 5)
 
-        inputThreeSizer.Add(inputThreeIco, 0, wx.ALL, 5)
         inputThreeSizer.Add(labelThree, 0, wx.ALL, 5)
         inputThreeSizer.Add(inputTxtThree, 1, wx.ALL|wx.EXPAND, 5)
 
-        inputFourSizer.Add(inputFourIco, 0, wx.ALL, 5)
         inputFourSizer.Add(labelFour, 0, wx.ALL, 5)
         inputFourSizer.Add(inputTxtFour, 1, wx.ALL|wx.EXPAND, 5)
 
