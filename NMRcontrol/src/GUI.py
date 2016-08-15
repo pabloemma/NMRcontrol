@@ -7,11 +7,21 @@ import wx
 import AnaControl as ANA
 #import images
 
+class RunFrame(wx.Frame):
+       def __init__ (self,parent,id,title,parameter_list):
+        """ creates the parameters, parameter list is what is contained in parameter file"""
+        print "Parameter Frame init"
+        wx.Frame.__init__(self,parent,id,title,(300,300),(600,400),style = wx.DEFAULT_FRAME_STYLE)
+        self.panel = wx.Panel(self)
+        self.panel.SetBackgroundColour('Grey')
+ 
+
+
 class ParameterFrame(wx.Frame):
     def __init__ (self,parent,id,title,parameter_list):
         """ creates the parameters, parameter list is what is contained in parameter file"""
         print "Parameter Frame init"
-        wx.Frame.__init__(self,parent,id,title,(300,300),(600,400),style = wx.DEFAULT_FRAME_STYLE)
+        wx.Frame.__init__(self,parent,id,title,(50,50),(50,400),style = wx.DEFAULT_FRAME_STYLE)
         self.panel = wx.Panel(self)
         self.panel.SetBackgroundColour('Pink')
         self.parameter_list = parameter_list
@@ -91,9 +101,11 @@ class ParameterFrame(wx.Frame):
             self.parameter_list[self.MyLabelArray[l].GetValue()] = self.MyInputArray[l].GetValue()
         print 'onOK handler'
         #print self.parameter_list
+        self.Destroy()
         return self.parameter_list
 
     def onCancel(self, event):
+        self.Destroy()
         return 0
 
     def closeProgram(self):
@@ -177,6 +189,8 @@ class MyFrame(wx.Frame):
         
         self.MyParFrame = ParameterFrame(parent=None,id = -1,title= "Set Parameters",parameter_list =self.ParList)  # open a parameter frame
         self.MyParFrame.Show()
+        
+        
         
         
         return  # on save or close or whatever
