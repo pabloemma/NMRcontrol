@@ -5,6 +5,7 @@ Created on Aug 9, 2016
 '''
 import wx
 import AnaControl as ANA
+import os
 #import images
 
 class RunFrame(wx.Frame):
@@ -165,7 +166,9 @@ class MyFrame(wx.Frame):
         menuCont2 = menuControl.Append(wx.NewId(),"Go","Run the NMRanalyzer")
 
         menuBar.Append(menuControl,"Control")
-
+        
+        
+        
 
             #binding the action to the menus
         self.Bind(wx.EVT_MENU,self.OnExit,menuitem1) # bind action to menu item       
@@ -199,8 +202,20 @@ class MyFrame(wx.Frame):
         
         
     def OnRunAnalyzer(self,event):
+        self.MyRunFrame = RunFrame(parent=None,id = -1,title= "Run Control",parameter_list =self.ParList)  # open a parameter frame
+        wildcard = "Python source (*.py)|*.py|" 
+        "Compiled Python (*.pyc)|*.pyc|" \
+        "All files (*.*)|*.*"
+        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
+        if dialog.ShowModal() == wx.ID_OK:
+            print dialog.GetPath() 
+
+        dialog.Destroy()
+
+        self.MyRunFrame.Show()
         print "run analyzer"
 
+    
 
         
 class MyGUIapp(wx.App):
@@ -221,6 +236,8 @@ class MyGUIapp(wx.App):
         #myC.Cleanup()
 
         self.frame = MyFrame(parent=None,id = -1,title= "NMR control",parlist = self.ParList)
+        
+        
         self.frame.Show()
         # make this the topwindow
         self.SetTopWindow(self.frame)
