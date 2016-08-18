@@ -95,7 +95,9 @@ class MyFrame(wx.Frame):
         self.MySizer.Add(self.MyFileInput,pos = (0,4),span=(1,10))
         self.MySizer.AddGrowableCol(4, 10) # make colum4 growable
  
-        
+        self.MyInputFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"InputFile",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
+        self.MySizer.Add(self.MyInputFileLabel,pos = (1,0),span=(1,4))
+      
         
         # create the run button
         
