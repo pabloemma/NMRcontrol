@@ -52,7 +52,7 @@ class ParameterFrame(wx.Frame):
             print k
 #            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
             self.MyLabelArray.append(wx.TextCtrl(self.panel, wx.ID_ANY, k,style = wx.TE_READONLY))  # put the variable name from the key
-            self.MyInputArray.append(wx.TextCtrl(self.panel, wx.ID_ANY, self.parameter_list[k],style = wx.TE_PROCESS_ENTER))
+            self.MyInputArray.append(wx.TextCtrl(self.panel, wx.ID_ANY, self.parameter_list[k],style = wx.TE_PROCESS_ENTER ))
             self.counter = self.counter+1
          
 
