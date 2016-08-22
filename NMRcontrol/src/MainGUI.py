@@ -97,6 +97,8 @@ class MyFrame(wx.Frame):
  
         self.MyInputFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"InputFile",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
         self.MySizer.Add(self.MyInputFileLabel,pos = (1,0),span=(1,4))
+        # bind to rght click
+        self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
       
         
         # create the run button
@@ -141,17 +143,19 @@ class MyFrame(wx.Frame):
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             print dialog.GetPath() 
-            self.ParFileName = dialog.GetPath
+            self.ParFileName = dialog.GetPath()
         dialog.Destroy()
 
     def OnFileDialogMultiple(self,event):
         """ If I hit tab in file input it opens file dialog, selects only one file"""
-        wildcard = "*.csv |xls |*.*"
+        #make sure not to have spaces in the wildcard definition.
+        wildcard = "Root files (*.root)|*.root"
 
-        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN,wx.MULTIPLE)
+        dialog = wx.FileDialog(None, "Choose an inputfile", os.getcwd(), "", wildcard, wx.OPEN | wx.MULTIPLE)
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
             self.input_filelist = dialog.GetPaths()
+            print self.input_filelist
 
         dialog.Destroy()
         
