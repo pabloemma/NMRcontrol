@@ -85,7 +85,7 @@ class MyFrame(wx.Frame):
         self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFileName ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
 
         #bind textctrl to right click
-        self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialog) 
+        self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) 
 
         #self.MyFileInput.Bind(wx.EVT_SET_FOCUS, self.OnFileDialog) 
 
@@ -114,7 +114,8 @@ class MyFrame(wx.Frame):
         # Now bind the actions
 
         self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
-        self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialog,self.MyFileInput)
+        
+        self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialogSingle,self.MyFileInput)
         
                          
         # now the file dialog
@@ -133,16 +134,26 @@ class MyFrame(wx.Frame):
         print "hit run"
         pass
        
-    def OnFileDialog(self,event):
-        """ If I hit tab in file input it opens file dialog"""
+    def OnFileDialogSingle(self,event):
+        """ If I hit tab in file input it opens file dialog, selects only one file"""
         wildcard = "*.par |*.*"
 
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             print dialog.GetPath() 
-
+            self.ParFileName = dialog.GetPath
         dialog.Destroy()
 
+    def OnFileDialogMultiple(self,event):
+        """ If I hit tab in file input it opens file dialog, selects only one file"""
+        wildcard = "*.csv |xls |*.*"
+
+        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN,wx.MULTIPLE)
+        if dialog.ShowModal() == wx.ID_OK:
+            dialog.GetPath() 
+            self.input_filelist = dialog.GetPaths()
+
+        dialog.Destroy()
         
  
 
