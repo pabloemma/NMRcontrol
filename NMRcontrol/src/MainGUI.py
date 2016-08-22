@@ -138,7 +138,7 @@ class MyFrame(wx.Frame):
        
     def OnFileDialogSingle(self,event):
         """ If I hit tab in file input it opens file dialog, selects only one file"""
-        wildcard = "*.par |*.*"
+        wildcard = "*.par|*.*"
 
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
