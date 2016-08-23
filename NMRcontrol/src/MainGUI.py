@@ -98,8 +98,10 @@ class MyFrame(wx.Frame):
         self.MyInputFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"InputFile",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
         self.MySizer.Add(self.MyInputFileLabel,pos = (1,0),span=(1,4))
         # bind to rght click
-        self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
-      
+        #self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
+        FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
+        self.MySizer.Add(FileButton,pos = (2,4))
+    
         
         # create the run button
         
@@ -119,7 +121,8 @@ class MyFrame(wx.Frame):
         
         self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialogSingle,self.MyFileInput)
         
-                         
+        self.Bind(wx.EVT_RADIOBUTTON,self.OnFileDialogMultiple,FileButton)
+                        
         # now the file dialog
         
                          
