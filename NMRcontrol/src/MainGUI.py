@@ -67,7 +67,7 @@ class MyFrame(wx.Frame):
         # now create the sizer
         self.PanelLayout()
         
-        
+
         self.MyPanel.Show()
         #self.ParList = ParList
         
@@ -114,9 +114,12 @@ class MyFrame(wx.Frame):
         self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
         ## put the parameter frame into the sizer
         self.MySizer.Add(self.ParF,(1,5))
+#        self.MySizer.Add(self.ParF.panel,pos = (1,5),span=(8,12))
+  #      print self.ParF.MyLabel
         
         
-        self.SetSizer(self.MySizer)
+        self.SetSizerAndFit(self.MySizer)
+        self.Show()
         
         
         

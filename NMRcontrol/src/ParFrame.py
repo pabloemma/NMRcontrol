@@ -81,6 +81,7 @@ class ParameterFrame(wx.Frame):
 
         self.panel.SetSizer(topSizer)
         topSizer.Fit(self)
+        self.Show()
 
 
     def onOK(self, event):
