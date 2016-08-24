@@ -6,6 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
+import ParFrame as PF
 
 
 
@@ -100,7 +101,7 @@ class MyFrame(wx.Frame):
         # bind to rght click
         #self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
         FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
-        self.MySizer.Add(FileButton,pos = (2,4))
+        self.MySizer.Add(FileButton,pos = (1,4))
     
         
         # create the run button
@@ -108,6 +109,13 @@ class MyFrame(wx.Frame):
         
         RunButton = wx.RadioButton(self.MyPanel,-1,"Run")
         self.MySizer.Add(RunButton,pos = (10,1))
+        
+        # now get the parameters in
+        self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
+        ## put the parameter frame into the sizer
+        self.MySizer.Add(self.ParF,(1,5))
+        
+        
         self.SetSizer(self.MySizer)
         
         
@@ -162,7 +170,9 @@ class MyFrame(wx.Frame):
 
         dialog.Destroy()
         
- 
+        
+        
+         
 
 if __name__ == '__main__':
     MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
