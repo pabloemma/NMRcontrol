@@ -32,8 +32,8 @@ class MainGUI(wx.App):
         myC = ANA.myControl()
         self.ParList = myC.ReadParameterFile()
         print "Gui", self.ParList
-        self.frame = MyFrame(parent=None,id = -1,title= "NMR control",parlist = self.ParList, filename = self.ParFilename)
-        
+        self.frame = MyFrame(parent=None,id=-1,title= "NMR control",parlist = self.ParList, filename = self.ParFilename)
+        print " id of frame",self.frame.GetId()
         
         self.frame.Show()
         # make this the topwindow
@@ -53,8 +53,9 @@ class MyFrame(wx.Frame):
     """
     def __init__ (self,parent,id,title,parlist, filename):
         print "Frame init"
+        #
         wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (1200,800),style = wx.DEFAULT_FRAME_STYLE)
-        
+        # determine the parent Id so that we can place parameter panel into main panel (hopefully)
         self.MyPanel = wx.Panel(self)
         self.MyPanel.SetBackgroundColour('Grey')
         
@@ -110,11 +111,18 @@ class MyFrame(wx.Frame):
         RunButton = wx.RadioButton(self.MyPanel,-1,"Run")
         self.MySizer.Add(RunButton,pos = (10,1))
         
+        
+        
+        
+        
+        #do the parametre list with independent window, but then give the parameters in boxes on main control
+        
         # now get the parameters in
-        self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
+        #self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
+        self.ParF = PF.ParameterFrame(parent=self.MyPanel,id = -1,title= "Parameters",parameter_list = self.ParList)
         ## put the parameter frame into the sizer
         self.MySizer.Add(self.ParF,(1,5))
-#        self.MySizer.Add(self.ParF.panel,pos = (1,5),span=(8,12))
+        #self.MySizer.Add(self.ParF.panel,pos = (1,5),span=(8,12))
   #      print self.ParF.MyLabel
         
         

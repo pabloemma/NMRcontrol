@@ -80,8 +80,9 @@ class ParameterFrame(wx.Frame):
         topSizer.Add(btnSizer, 0, wx.ALL|wx.CENTER, 5)
 
         self.panel.SetSizer(topSizer)
-        topSizer.Fit(self)
+        topSizer.Fit(self) 
         self.Show()
+ 
 
 
     def onOK(self, event):
