@@ -20,10 +20,10 @@ class myControl(object):
     """ this is the base class"""
     
     
-    def __init__(self):
+    def __init__(self,filename):
         """ initialzing routine"""
         #next file is default for now, we will later change this through wx widgets.
-        self.ParameterFile="/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par"
+        self.ParameterFile=filename
         
         self.ParList = {}   # this will hold the list of parameters from the parameter file
                             #Later we will change these values in the GUI
@@ -66,6 +66,7 @@ class myControl(object):
         """ Creates new file with new parameters"""
         
         # delete old file by truncating it to 0
+        self.ParFile = open(self.ParameterFile,'w')  # read and write
         self.ParFile.truncate(0)
         self.ParFile.close()  # have to do this otherwise we have starnge chracters in the file
         self.ParFile = open(self.ParameterFile,'w')  # read and write

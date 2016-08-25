@@ -6,7 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
-import ParFrame as PF
+#import ParFrame as PF
 
 
 
@@ -29,7 +29,7 @@ class MainGUI(wx.App):
 
 
     def OnInit(self): 
-        myC = ANA.myControl()
+        myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
         self.ParList = myC.ReadParameterFile()
         print "Gui", self.ParList
         self.frame = MyFrame(parent=None,id=-1,title= "NMR control",parlist = self.ParList, filename = self.ParFilename)
@@ -57,7 +57,15 @@ class MyFrame(wx.Frame):
         wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (1200,800),style = wx.DEFAULT_FRAME_STYLE)
         # determine the parent Id so that we can place parameter panel into main panel (hopefully)
         self.MyPanel = wx.Panel(self)
-        self.MyPanel.SetBackgroundColour('Grey')
+        
+        #Instantiate my control
+        self.myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
+        
+        # create a background color
+        MyColor =wx.Colour(240)
+        MyColorF =wx.Colour(240-50)
+        #self.MyPanel.SetBackgroundColour(MyColor)
+        self.MyPanel.SetForegroundColour(MyColorF)
         
         
         self.MyStatusBar = self.CreateStatusBar()
@@ -108,25 +116,68 @@ class MyFrame(wx.Frame):
         # create the run button
         
         
-        RunButton = wx.RadioButton(self.MyPanel,-1,"Run")
-        self.MySizer.Add(RunButton,pos = (10,1))
         
+        #set up pamatere block
         
+        self.MyIcon = []
+        self.MyLabelArray = []
+        self.MyInputArray = []
+        self.MyLabel = []
+        self.MyInput = []
+        for k in self.ParList:
+            self.MyLabel.append(k)            
+            self.MyInput.append(self.ParList[k])
+            
+        #create the tex boxes
+        self.counter =0 
+        for k in self.ParList:
+            print k
+#            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
+            self.MyLabelArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, k,style = wx.TE_READONLY))  # put the variable name from the key
+            self.MyInputArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
+            print self.counter+2
+            self.MyLabelArray[self.counter].SetBackgroundColour('Yellow')
+            self.MySizer.Add(self.MyLabelArray[self.counter], pos=(3+self.counter,0),span=(1,4))
+            self.MySizer.Add(self.MyInputArray[self.counter], pos=(3+self.counter,4),span=(1,4))
+            self.counter = self.counter+1
+
+        #control buttons
+        #stop does not do anything yet
         
-        
+        #RunButton = wx.RadioButton(self.MyPanel,-1,"Run")
+        RunButton = wx.Button(self.MyPanel,-1,"Run",)
+        RunButton.SetBackgroundColour('Blue')
+        RunButton.ClearBackground()
+        self.MySizer.Add(RunButton,pos = (4+self.counter,1))
+        StopButton = wx.Button(self.MyPanel,-1,"Stop")
+        StopButton.SetBackgroundColour('Red')
+        self.MySizer.Add(StopButton,pos = (4+self.counter,4))
+          
         
         #do the parametre list with independent window, but then give the parameters in boxes on main control
         
         # now get the parameters in
         #self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
-        self.ParF = PF.ParameterFrame(parent=self.MyPanel,id = -1,title= "Parameters",parameter_list = self.ParList)
+        #self.ParF = PF.ParameterFrame(parent=self.MyPanel,id = -1,title= "Parameters",parameter_list = self.ParList)
         ## put the parameter frame into the sizer
-        self.MySizer.Add(self.ParF,(1,5))
+        #self.MySizer.Add(self.ParF,(1,5))
         #self.MySizer.Add(self.ParF.panel,pos = (1,5),span=(8,12))
   #      print self.ParF.MyLabel
         
         
+        # add the title and version to the control
+        Title = "The NMR Control Program"
+        Version = "Version 0.1"
+        self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size =(300,50),style = wx.TE_READONLY) 
+        self.MyTitleLabel.SetBackgroundColour('Green')
+        self.MyVersion = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Version,size =(300,50),style = wx.TE_READONLY) 
+        self.MyVersion.SetBackgroundColour('Green')
+        self.MySizer.Add(self.MyTitleLabel,pos = (4,15))
+        self.MySizer.Add(self.MyVersion,pos =(6,15))
         self.SetSizerAndFit(self.MySizer)
+
+        
+        
         self.Show()
         
         
@@ -136,7 +187,9 @@ class MyFrame(wx.Frame):
         
         # Now bind the actions
 
-        self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
+ #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
+        self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
+        self.Bind(wx.EVT_BUTTON,self.OnStopAnalyzer,StopButton)
         
         self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialogSingle,self.MyFileInput)
         
@@ -156,7 +209,21 @@ class MyFrame(wx.Frame):
 
     def OnRunAnalyzer(self,event):
         print "hit run"
-        pass
+        #make sure you get the current parameter list
+        for l in range(0,self.counter):
+            #print self.MyLabelArray[l].GetValue(),self.MyInputArray[l].GetValue()
+            self.ParList[self.MyLabelArray[l].GetValue()] = self.MyInputArray[l].GetValue()
+        #self.Destroy()
+        
+        #Now push the parameter list back to the Control Program and write them there
+        self.myC.ParList = self.ParList
+        self.myC.WriteParameterFile()
+ 
+    def OnStopAnalyzer(self,event):
+        print "stop run"
+ 
+        
+
        
     def OnFileDialogSingle(self,event):
         """ If I hit tab in file input it opens file dialog, selects only one file"""
