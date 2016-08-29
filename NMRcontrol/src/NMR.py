@@ -20,7 +20,9 @@ class NMR(object):
     def Analyzer(self, Image,CommandArgs):
         """ runs analyzer, where the commandargs have been created by anacontrol"""
         self.FullCommand = Image +' '+CommandArgs
+        print self.FullCommand
         os.system(self.FullCommand)
+        return 
         
         
         

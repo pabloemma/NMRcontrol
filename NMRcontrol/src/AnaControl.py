@@ -77,6 +77,7 @@ class myControl(object):
             templine =k+'     '+self.ParList[k]+'\n'
             print k, templine
             self.ParFile.write(templine)
+        self.ParFile.close()
             
     def CreateNMRAna(self):
         """this creates the commandline to be passed to NMRanalyzer,

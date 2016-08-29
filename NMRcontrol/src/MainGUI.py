@@ -6,6 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
+import NMR
 #import ParFrame as PF
 
 
@@ -60,7 +61,8 @@ class MyFrame(wx.Frame):
         
         #Instantiate my control
         self.myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
-        
+        self.myANA = NMR.NMR() #instantiate the engie
+
         # create a background color
         MyColor =wx.Colour(240)
         MyColorF =wx.Colour(240-50)
@@ -166,20 +168,30 @@ class MyFrame(wx.Frame):
         
         
         # add the title and version to the control
-        Title = "The NMR Control Program"
-        Version = "Version 0.1"
-        self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size =(300,50),style = wx.TE_READONLY) 
-        self.MyTitleLabel.SetBackgroundColour('Green')
+        Title = "The NMR Control Program \n Andi Klein"
+        Version = "Version 0.1 September 2016"
+        
+        self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size =(350,75),style = wx.TE_READONLY|wx.TE_MULTILINE) 
+        #self.MyTitleLabel.SetLabelMarkup('big')
+        # create a wxfont
+        temp_font=wx.Font(15,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_SLANT,wx.FONTSIZE_XX_LARGE )
+        temp_font.Scale(1.5)
+        temp_font.MakeBold()
+        self.MyTitleLabel.SetFont(temp_font)        
+        self.MyTitleLabel.SetBackgroundColour('Blue')
         self.MyVersion = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Version,size =(300,50),style = wx.TE_READONLY) 
-        self.MyVersion.SetBackgroundColour('Green')
-        self.MySizer.Add(self.MyTitleLabel,pos = (4,15))
-        self.MySizer.Add(self.MyVersion,pos =(6,15))
+        temp_font.Scale(.9)
+        temp_font.SetFamily(wx.FONTFAMILY_TELETYPE)        
+        self.MyVersion.SetBackgroundColour('Pink')
+        self.MyVersion.SetFont(temp_font)
+        self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(3,1))
+        self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
         self.SetSizerAndFit(self.MySizer)
 
         
         
         self.Show()
-        
+
         
         
         
@@ -218,7 +230,25 @@ class MyFrame(wx.Frame):
         #Now push the parameter list back to the Control Program and write them there
         self.myC.ParList = self.ParList
         self.myC.WriteParameterFile()
+        # now create the full command line argument 
+        #create one long string out of file list
+        arg2 =' '
+        for k in range(0,len(self.input_filelist)) :
+            arg2=arg2+self.input_filelist[k]+' '
+        self.full_command = self.input_directory +'/ ' +arg2+' -f '+ self.ParFileName
+        # create a process dialog
+        #progress = wx.GenericProgressDialog("NMR progress","still analysing",style=wx.PD_ELAPSED_TIME)
+        #progress.Show()
+        
+        # need to put this in a separate thread
+        Full_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
+        os.system(Full_command)
  
+        print 'done with root'
+        progress.Destroy()
+        
+        
+        
     def OnStopAnalyzer(self,event):
         print "stop run"
  
@@ -240,11 +270,24 @@ class MyFrame(wx.Frame):
         #make sure not to have spaces in the wildcard definition.
         wildcard = "Root files (*.root)|*.root"
 
-        dialog = wx.FileDialog(None, "Choose an inputfile", os.getcwd(), "", wildcard, wx.OPEN | wx.MULTIPLE)
+        dialog =wx.DirDialog(None, "Choose an inputdirctory")
+        if dialog.ShowModal() == wx.ID_OK:
+             
+            self.input_directory=dialog.GetPath() 
+            directory = self.input_directory 
+       
+
+        dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.OPEN | wx.MULTIPLE)
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
-            self.input_filelist = dialog.GetPaths()
-            print self.input_filelist
+            self.input_filelist =[]
+            filelist = dialog.GetPaths()
+            # the next step is in for historical reasons, the C++ program wants one directory and then all
+            # the filenames. So firts I have to strip the directory out again
+            print directory,self.input_filelist
+            for temp in range(0,len(filelist)):
+                self.input_filelist.append(filelist[temp].replace(directory+'/',''))
+                print self.input_filelist[temp]
 
         dialog.Destroy()
         
