@@ -158,20 +158,16 @@ class MyFrame(wx.Frame):
         
         #do the parametre list with independent window, but then give the parameters in boxes on main control
         
-        # now get the parameters in
-        #self.ParF = PF.ParameterFrame(parent=None,id = -1,title= "Parameters",parameter_list = self.ParList)
-        #self.ParF = PF.ParameterFrame(parent=self.MyPanel,id = -1,title= "Parameters",parameter_list = self.ParList)
-        ## put the parameter frame into the sizer
-        #self.MySizer.Add(self.ParF,(1,5))
-        #self.MySizer.Add(self.ParF.panel,pos = (1,5),span=(8,12))
-  #      print self.ParF.MyLabel
-        
+         
+        # file list
+        self.MyFileList=wx.ListCtrl(self.MyPanel, wx.ID_ANY,pos=(600,300),size=(400,800))
+
         
         # add the title and version to the control
         Title = "The NMR Control Program \n Andi Klein"
         Version = "Version 0.1 September 2016"
         
-        self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size =(350,75),style = wx.TE_READONLY|wx.TE_MULTILINE) 
+        self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size = (350,75),style = wx.TE_READONLY|wx.TE_MULTILINE) 
         #self.MyTitleLabel.SetLabelMarkup('big')
         # create a wxfont
         temp_font=wx.Font(15,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_SLANT,wx.FONTSIZE_XX_LARGE )
@@ -186,6 +182,7 @@ class MyFrame(wx.Frame):
         self.MyVersion.SetFont(temp_font)
         self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(3,1))
         self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
+        self.MySizer.Add(self.MyFileList,pos=(20,8))
         self.SetSizerAndFit(self.MySizer)
 
         
@@ -237,8 +234,8 @@ class MyFrame(wx.Frame):
             arg2=arg2+self.input_filelist[k]+' '
         self.full_command = self.input_directory +'/ ' +arg2+' -f '+ self.ParFileName
         # create a process dialog
-        #progress = wx.GenericProgressDialog("NMR progress","still analysing",style=wx.PD_ELAPSED_TIME)
-        #progress.Show()
+        progress = wx.GenericProgressDialog("NMR progress","still analysing",style=wx.PD_ELAPSED_TIME)
+        progress.Show()
         
         # need to put this in a separate thread
         Full_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
@@ -288,8 +285,12 @@ class MyFrame(wx.Frame):
             for temp in range(0,len(filelist)):
                 self.input_filelist.append(filelist[temp].replace(directory+'/',''))
                 print self.input_filelist[temp]
+                self.MyFileList.InsertItem(self.input_filelist[temp])
+                
 
         dialog.Destroy()
+        # now create a litsctrl box with all the files
+        
         
         
         
