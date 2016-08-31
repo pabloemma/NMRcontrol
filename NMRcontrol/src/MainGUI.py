@@ -304,6 +304,7 @@ class MyFrame(wx.Frame):
             dc.SetClippingRect(rect)
         dc.Clear()
         bmp = wx.Bitmap("IMG_0424.jpg")
+        bmp.SetSize(size=(1200,1400))
         dc.DrawBitmap(bmp, 0, 0)       
         
         
