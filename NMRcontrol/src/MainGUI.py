@@ -203,7 +203,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialogSingle,self.MyFileInput)
         
         self.Bind(wx.EVT_RADIOBUTTON,self.OnFileDialogMultiple,FileButton)
-                        
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)  # create background picture                     
         # now the file dialog
         
                          
@@ -291,7 +291,20 @@ class MyFrame(wx.Frame):
         dialog.Destroy()
         # now create a litsctrl box with all the files
         
-        
+    def OnEraseBackground(self, evt):
+        """
+        Add a picture to the background
+        """
+        # yanked from ColourDB.py
+        dc = evt.GetDC()
+ 
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.Clear()
+        bmp = wx.Bitmap("IMG_0424.jpg")
+        dc.DrawBitmap(bmp, 0, 0)       
         
         
          
