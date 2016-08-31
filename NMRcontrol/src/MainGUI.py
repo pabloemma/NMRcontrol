@@ -160,7 +160,10 @@ class MyFrame(wx.Frame):
         
          
         # file list
-        self.MyFileList=wx.ListCtrl(self.MyPanel, wx.ID_ANY,pos=(600,300),size=(400,800))
+        self.MyFileList=wx.ListCtrl(self.MyPanel, wx.ID_ANY,pos=(600,300),size=(400,800),style=wx.LC_REPORT)
+        self.MyFileList.InsertColumn(0,'NMR file')
+        
+        #self.MyFileList.InsertStringItem(1,'test')
 
         
         # add the title and version to the control
@@ -285,7 +288,7 @@ class MyFrame(wx.Frame):
             for temp in range(0,len(filelist)):
                 self.input_filelist.append(filelist[temp].replace(directory+'/',''))
                 print self.input_filelist[temp]
-                self.MyFileList.InsertItem(self.input_filelist[temp])
+                self.MyFileList.InsertItem(temp+1,self.input_filelist[temp])
                 
 
         dialog.Destroy()
