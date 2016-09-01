@@ -63,6 +63,8 @@ class MyFrame(wx.Frame):
         #Instantiate my control
         self.myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
         self.myANA = NMR.NMR() #instantiate the engie
+        self.NMRthread = [] # create an empty list of threads
+        self.NMRthreadcount = 0 # number of threads
 
         # create a background color
         MyColor =wx.Colour(240)
@@ -82,6 +84,13 @@ class MyFrame(wx.Frame):
 
         self.MyPanel.Show()
         #self.ParList = ParList
+        
+        
+        
+        
+        
+        
+        
         
     def PanelLayout(self): 
         """ this lays out the control panel 
@@ -162,7 +171,7 @@ class MyFrame(wx.Frame):
          
         # file list
         self.MyFileList=wx.ListCtrl(self.MyPanel, wx.ID_ANY,pos=(600,300),size=(400,800),style=wx.LC_REPORT)
-        self.MyFileList.InsertColumn(0,'Input files for analysis file                                                       ')
+        self.MyFileList.InsertColumn(0,'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Input files for analysis file !!!!!!!!!!!!!!!!!!!!!!!!')
         self.MyFileList.SetColumnWidth(0,wx.LIST_AUTOSIZE)
         
         #self.MyFileList.InsertStringItem(1,'test')
@@ -180,14 +189,14 @@ class MyFrame(wx.Frame):
         temp_font.MakeBold()
         self.MyTitleLabel.SetFont(temp_font)        
         self.MyTitleLabel.SetBackgroundColour('Blue')
-        self.MyVersion = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Version,size =(300,50),style = wx.TE_READONLY) 
+        self.MyVersion = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Version,size =(350,50),style = wx.TE_READONLY) 
         temp_font.Scale(.9)
         temp_font.SetFamily(wx.FONTFAMILY_TELETYPE)        
         self.MyVersion.SetBackgroundColour('Pink')
         self.MyVersion.SetFont(temp_font)
-        self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(3,1))
+        self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(4,4))
         self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
-        self.MySizer.Add(self.MyFileList,pos=(15,0))
+        self.MySizer.Add(self.MyFileList,pos=(16,0),span=(10,10))
         self.SetSizerAndFit(self.MySizer)
 
         
@@ -246,6 +255,9 @@ class MyFrame(wx.Frame):
         self.NMRFull_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
         #os.system(NMRFull_command)
         
+        
+        self.RunThread()
+    
  
         print 'done with root'
         progress.Destroy()
@@ -284,16 +296,18 @@ class MyFrame(wx.Frame):
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
             #self.input_filelist =[]
-            filelist=self.input_filelist = dialog.GetPaths()
+            filelist= dialog.GetPaths()
             # the next step is in for historical reasons, the C++ program wants one directory and then all
             # the filenames. So firts I have to strip the directory out again
-            print directory,self.input_filelist
+            
+#            print directory,self.input_filelist
+            self.input_filelist = []
             self.MyFileList.DeleteAllItems()
-            for temp in range(0,len(self.input_filelist)):
+            for temp in range(0,len(filelist)):
                 self.input_filelist.append(filelist[temp].replace(directory+'/',''))
                 print self.input_filelist[temp]
                 self.MyFileList.InsertStringItem(temp+1,self.input_filelist[temp])
-                self.MyFileList.SetStringItem()
+                #self.MyFileList.SetStringItem()
             # now update list control
 
                 
@@ -317,10 +331,34 @@ class MyFrame(wx.Frame):
         bmp.SetSize(size=(1200,1400))
         dc.DrawBitmap(bmp, 0, 0)       
         
-    def ThreadTarget(self):  
+
+    def RunThread(self):
+        """ creates the root thread, checks first if there is already one"""
+                #run the thread
+                
+                # check if there is already a thread
+        
+        
+        #create the threads to run
+        self.NMRthread.append(threading.Thread(target = self.NMRThreadTarget ))
+        
+        self.NMRthread[self.NMRthreadcount].start()
+        self.NMRthreadcount = self.NMRthreadcount+1
+        
+        print " starting NMR thread"
+        return
+
+        
+        
+        
+    def NMRThreadTarget(self): 
+        """ setting up the firts thread""" 
         try:
 
-            os.system(Full_command)
+            os.system(self.NMRFull_command)
+        except:
+            print " cannot launch NMR thread"
+        return   
              
          
 
