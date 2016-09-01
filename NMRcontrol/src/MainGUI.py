@@ -78,6 +78,36 @@ class MyFrame(wx.Frame):
         self.ParList = parlist
         self.ParFileName = filename
         
+        
+        
+        menuBar = wx.MenuBar()  # Create the menu bar
+        menu1 = wx.Menu()
+          
+
+        menuitem1 = menu1.Append(wx.NewId(),"Q&uit","Leave Dodge")
+        menuBar.Append(menu1, "&File") # add this submenu to the menu bar
+
+
+        menuHelp = wx.Menu()  #this is the control menu
+
+        menuHelp1 = menuHelp.Append(wx.NewId(),"Help on GUI") # the commands are (id, menu item, what is whown with mouse over)
+        menuHelp2 = menuHelp.Append(wx.NewId(),"Help on Analyzer") # the commands are (id, menu item, what is whown with mouse over)
+        menuBar.Append(menuHelp,"Help")
+         
+
+        self.Bind(wx.EVT_MENU,self.OnExit,menuitem1) # bind action to menu item       
+        self.Bind(wx.EVT_MENU,self.OnHelpGui,menuHelp1)
+        self.Bind(wx.EVT_MENU,self.OnHelpAnalyzer,menuHelp2)
+
+
+ 
+        self.SetMenuBar(menuBar)
+      
+        
+
+            #binding the action to the menus
+
+        
         # now create the sizer
         self.PanelLayout()
         
@@ -360,6 +390,14 @@ class MyFrame(wx.Frame):
             print " cannot launch NMR thread"
         return   
              
+ ############# the menu items
+
+    def OnHelpGui(self,event):
+        pass
+ 
+    def OnHelpAnalyzer(self,event):
+        pass
+ 
          
 
 if __name__ == '__main__':
