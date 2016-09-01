@@ -161,7 +161,8 @@ class MyFrame(wx.Frame):
          
         # file list
         self.MyFileList=wx.ListCtrl(self.MyPanel, wx.ID_ANY,pos=(600,300),size=(400,800),style=wx.LC_REPORT)
-        self.MyFileList.InsertColumn(0,'NMR file')
+        self.MyFileList.InsertColumn(0,'Input files for analysis file                                                       ')
+        self.MyFileList.SetColumnWidth(0,wx.LIST_AUTOSIZE)
         
         #self.MyFileList.InsertStringItem(1,'test')
 
@@ -185,7 +186,7 @@ class MyFrame(wx.Frame):
         self.MyVersion.SetFont(temp_font)
         self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(3,1))
         self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
-        self.MySizer.Add(self.MyFileList,pos=(20,8))
+        self.MySizer.Add(self.MyFileList,pos=(15,0))
         self.SetSizerAndFit(self.MySizer)
 
         
@@ -280,15 +281,19 @@ class MyFrame(wx.Frame):
         dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.OPEN | wx.MULTIPLE)
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
-            self.input_filelist =[]
-            filelist = dialog.GetPaths()
+            #self.input_filelist =[]
+            filelist=self.input_filelist = dialog.GetPaths()
             # the next step is in for historical reasons, the C++ program wants one directory and then all
             # the filenames. So firts I have to strip the directory out again
             print directory,self.input_filelist
-            for temp in range(0,len(filelist)):
+            self.MyFileList.DeleteAllItems()
+            for temp in range(0,len(self.input_filelist)):
                 self.input_filelist.append(filelist[temp].replace(directory+'/',''))
                 print self.input_filelist[temp]
-                self.MyFileList.InsertItem(temp+1,self.input_filelist[temp])
+                self.MyFileList.InsertStringItem(temp+1,self.input_filelist[temp])
+                self.MyFileList.SetStringItem()
+            # now update list control
+
                 
 
         dialog.Destroy()
