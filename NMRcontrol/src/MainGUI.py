@@ -7,6 +7,7 @@ import wx
 import os
 import AnaControl as ANA
 import NMR
+import threading # we will run the analyzer in a secodn thread
 #import ParFrame as PF
 
 
@@ -242,8 +243,9 @@ class MyFrame(wx.Frame):
         progress.Show()
         
         # need to put this in a separate thread
-        Full_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
-        os.system(Full_command)
+        self.NMRFull_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
+        #os.system(NMRFull_command)
+        
  
         print 'done with root'
         progress.Destroy()
@@ -315,7 +317,11 @@ class MyFrame(wx.Frame):
         bmp.SetSize(size=(1200,1400))
         dc.DrawBitmap(bmp, 0, 0)       
         
-        
+    def ThreadTarget(self):  
+        try:
+
+            os.system(Full_command)
+             
          
 
 if __name__ == '__main__':
