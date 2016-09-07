@@ -393,6 +393,10 @@ class MyFrame(wx.Frame):
  ############# the menu items
 
     def OnHelpGui(self,event):
+        """ give help on how to use the Control"""
+        #open a panel
+
+        
         pass
  
     def OnHelpAnalyzer(self,event):
