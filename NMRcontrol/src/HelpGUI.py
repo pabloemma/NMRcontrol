@@ -6,6 +6,7 @@ Created on Sep 2, 2016
 import wx
 import wx.html2 as html2
 import webbrowser
+import os
  
 
 
@@ -47,7 +48,23 @@ class MyPanel(wx.Panel):
         
         
         self.button = wx.Button(self,label="press me")
-        webbrowser.open('file:///Users/klein/git/NMRcontrol1/NMRcontrol/src/help_files/GUI_help.htm')
+        #find location of the files:
+        filename = 'GUI_help.htm'
+        print "current dir " ,os.getcwd()
+        self.help_file = os.getcwd()+'/help_files/'+filename
+        if(os.path.isfile(self.help_file)):
+            print "success"
+            self.help_file ='file://'+self.help_file
+
+            webbrowser.open(self.help_file)
+        else:
+            home = os.path.expanduser("~")
+            for root, dirs, files in os.walk(home):
+                for name in files:
+                    if name == filename:
+                        self.help_file = os.path.abspath(os.path.join(root, name))
+            self.help_file ='file://'+self.help_file
+            webbrowser.open(self.help_file)
             
         
  

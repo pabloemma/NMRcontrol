@@ -395,6 +395,7 @@ class MyFrame(wx.Frame):
     def OnHelpGui(self,event):
         """ give help on how to use the Control"""
         #open a panel
+        
 
         
         pass
