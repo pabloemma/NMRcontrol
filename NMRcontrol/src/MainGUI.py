@@ -6,6 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
+import HelpGUI
 import NMR
 import threading # we will run the analyzer in a secodn thread
 #import ParFrame as PF
@@ -395,7 +396,8 @@ class MyFrame(wx.Frame):
     def OnHelpGui(self,event):
         """ give help on how to use the Control"""
         #open a panel
-        
+        MyGH = HelpGUI.MyGuiApp(redirect = False) 
+        MyGH.MainLoop()       
 
         
         pass
