@@ -32,7 +32,21 @@ class MainGUI(wx.App):
 
 
     def OnInit(self): 
-        myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
+#        myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
+        #Check if parameter file exists
+        if(os.path.isfile(self.ParFilename)):
+            print "using parameter file " ,self.ParFilename
+        else :
+            parframe=wx.Frame(None, -1, 'Parfile')
+            dlg = wx.FileDialog(parframe,"Choose Parameter File")
+            dlg.ShowModal()
+            if dlg.ShowModal() == wx.ID_OK:
+                self.ParFilename = dlg.GetPath()
+                dlg.Destroy()
+                parframe.Destroy()
+
+        
+        myC = ANA.myControl(self.ParFilename)
         self.ParList = myC.ReadParameterFile()
         print "Gui", self.ParList
         self.frame = MyFrame(parent=None,id=-1,title= "NMR control",parlist = self.ParList, filename = self.ParFilename)
@@ -408,7 +422,7 @@ class MyFrame(wx.Frame):
          
 
 if __name__ == '__main__':
-    MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
+    MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
     print " before loop"
     MyG.MainLoop()
     print "After Loop"        
