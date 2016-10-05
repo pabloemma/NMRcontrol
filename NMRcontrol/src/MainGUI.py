@@ -32,8 +32,6 @@ class MainGUI(wx.App):
 
 
     def OnInit(self): 
-#        myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
-        #Check if parameter file exists
         self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename)
         print " id of frame",self.frame.GetId()
         
@@ -58,7 +56,9 @@ class MyFrame(wx.Frame):
         # determine the parent Id so that we can place parameter panel into main panel (hopefully)
         self.MyPanel = wx.Panel(self)
         
-        #Instantiate my control
+        #Instantiate my control, first check if there is a parameter file defined.
+        if(filename == None):  # if we give no filename, then we need to assign a dummy string so that the os.path can find file (it expects string)
+            filename='dummy'
         if(os.path.isfile(filename)):
             print "using parameter file " ,self.ParFilename
         else :
@@ -71,6 +71,7 @@ class MyFrame(wx.Frame):
  
         
         self.myC = ANA.myControl(self.ParFilename)
+        # read papameter file
         self.ParList = self.myC.ReadParameterFile()
         print "Gui", self.ParList
 
@@ -426,7 +427,8 @@ class MyFrame(wx.Frame):
          
 
 if __name__ == '__main__':
-    MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par1" )
+    #MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par1" )
+    MyG = MainGUI(redirect = False )
     print " before loop"
     MyG.MainLoop()
     print "After Loop"        
