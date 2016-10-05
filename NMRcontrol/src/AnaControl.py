@@ -42,20 +42,20 @@ class myControl(object):
         
 
         
-        TempCopy = self.ParameterFile+'_'+str(time.time()) # Create a backup copy with the current time added
-        print "Backup Copy of parameter file: " , TempCopy
+        self.TempCopy = self.ParameterFile+'_'+str(time.time()) # Create a backup copy with the current time added
+        print "Backup Copy of parameter file: " , self.TempCopy
         
-        outfil = open(TempCopy,'w') 
+        self.outfil = open(self.TempCopy,'w') 
         
 
         
         for myline in self.ParFile:  # iterate over the lines
             tempbuf = myline.split()    # split at one white space and slit at the most once
-            outfil.write(myline)
+            self.outfil.write(myline)
             print tempbuf[0], tempbuf[1]
             self.ParList[tempbuf[0]] = tempbuf[1]
             
-        outfil.close()  # now we are safe, the backup is closed
+        self.outfil.close()  # now we are safe, the backup is closed
          
         # loop over dictionary
         print "ANa control", self.ParList
@@ -78,6 +78,9 @@ class myControl(object):
             print k, templine
             self.ParFile.write(templine)
         self.ParFile.close()
+        # now we can delete the backup copy
+        os.remove(self.TempCopy)
+        
             
     def CreateNMRAna(self):
         """this creates the commandline to be passed to NMRanalyzer,
