@@ -34,22 +34,7 @@ class MainGUI(wx.App):
     def OnInit(self): 
 #        myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
         #Check if parameter file exists
-        if(os.path.isfile(self.ParFilename)):
-            print "using parameter file " ,self.ParFilename
-        else :
-            parframe=wx.Frame(None, -1, 'Parfile')
-            dlg = wx.FileDialog(parframe,"Choose Parameter File")
-            dlg.ShowModal()
-            if dlg.ShowModal() == wx.ID_OK:
-                self.ParFilename = dlg.GetPath()
-                dlg.Destroy()
-                parframe.Destroy()
-
-        
-        myC = ANA.myControl(self.ParFilename)
-        self.ParList = myC.ReadParameterFile()
-        print "Gui", self.ParList
-        self.frame = MyFrame(parent=None,id=-1,title= "NMR control",parlist = self.ParList, filename = self.ParFilename)
+        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename)
         print " id of frame",self.frame.GetId()
         
         self.frame.Show()
@@ -60,15 +45,13 @@ class MainGUI(wx.App):
         return True
 
 
- 
- 
 class MyFrame(wx.Frame):
     """ This is the main control frame 
     This is changed from GUI.py
     I am trying to get everything into one controll box if possible
     
     """
-    def __init__ (self,parent,id,title,parlist, filename):
+    def __init__ (self,parent,id,title, filename):
         print "Frame init"
         #
         wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (1200,800),style = wx.DEFAULT_FRAME_STYLE)
@@ -76,7 +59,26 @@ class MyFrame(wx.Frame):
         self.MyPanel = wx.Panel(self)
         
         #Instantiate my control
-        self.myC = ANA.myControl("/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par")
+        if(os.path.isfile(filename)):
+            print "using parameter file " ,self.ParFilename
+        else :
+            dlg1 = wx.FileDialog(None,"Choose Parameter File")
+            dlg1.ShowModal()
+            if dlg1.ShowModal() == wx.ID_OK:
+                self.ParFilename = dlg1.GetPath()
+                dlg1.Destroy()
+        print "using parameter file " ,self.ParFilename
+ 
+        
+        self.myC = ANA.myControl(self.ParFilename)
+        self.ParList = self.myC.ReadParameterFile()
+        print "Gui", self.ParList
+
+        
+        
+        
+        
+
         self.myANA = NMR.NMR() #instantiate the engie
         self.NMRthread = [] # create an empty list of threads
         self.NMRthreadcount = 0 # number of threads
@@ -90,8 +92,8 @@ class MyFrame(wx.Frame):
         
         self.MyStatusBar = self.CreateStatusBar()
         self.MyToolBar = self.CreateToolBar()
-        self.ParList = parlist
-        self.ParFileName = filename
+
+        #self.ParFileName = filename
         
         
         
@@ -99,7 +101,7 @@ class MyFrame(wx.Frame):
         menu1 = wx.Menu()
           
 
-        menuitem1 = menu1.Append(wx.NewId(),"Q&uit","Leave Dodge")
+        menuitem1 = menu1.Append(wx.NewId(),"Q&uit")
         menuBar.Append(menu1, "&File") # add this submenu to the menu bar
 
 
@@ -149,7 +151,7 @@ class MyFrame(wx.Frame):
         
         #Display filename turns out I need to define the size in the tex ctrl box
         self.MyFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"Parameter File",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
-        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFileName ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
+        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
 
         #bind textctrl to right click
         self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) 
@@ -273,6 +275,7 @@ class MyFrame(wx.Frame):
         """finishing"""
         print "leaving"
         self.Close(True)
+        exit()
     
 
     def OnRunAnalyzer(self,event):
@@ -410,6 +413,7 @@ class MyFrame(wx.Frame):
     def OnHelpGui(self,event):
         """ give help on how to use the Control"""
         #open a panel
+        print "help gui"
         MyGH = HelpGUI.MyGuiApp(redirect = False) 
         MyGH.MainLoop()       
 
@@ -422,7 +426,7 @@ class MyFrame(wx.Frame):
          
 
 if __name__ == '__main__':
-    MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
+    MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par1" )
     print " before loop"
     MyG.MainLoop()
     print "After Loop"        
