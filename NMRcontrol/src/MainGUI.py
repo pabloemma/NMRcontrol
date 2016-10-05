@@ -9,6 +9,7 @@ import AnaControl as ANA
 import HelpGUI
 import NMR
 import threading # we will run the analyzer in a secodn thread
+from copy import  deepcopy
 #import ParFrame as PF
 
 
@@ -190,8 +191,11 @@ class MyFrame(wx.Frame):
             
         #create the tex boxes
         self.counter =0 
+        self.ParListOriginal= deepcopy(self.ParList)  # here we stor the original parameter list; at the end before we run we check if anything has changed
+        # if that is the caase we ask user to either overwrite parameters of save them.
         for k in self.ParList:
             print k
+            #store in original list
 #            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
             self.MyLabelArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, k,style = wx.TE_READONLY))  # put the variable name from the key
             self.MyInputArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
@@ -287,9 +291,26 @@ class MyFrame(wx.Frame):
             self.ParList[self.MyLabelArray[l].GetValue()] = self.MyInputArray[l].GetValue()
         #self.Destroy()
         
-        #Now push the parameter list back to the Control Program and write them there
-        self.myC.ParList = self.ParList
-        self.myC.WriteParameterFile()
+        #check if we have changed anything in parameters
+        if(self.ParList == self.ParListOriginal):
+            print "nothing has changed"
+        else:
+            print " we have changes"
+        
+        # lets get a dialog box, where we can either overwrite the current file or give a new file name
+            myDialog = wx.TextEntryDialog(None,'enter filename','test',self.ParFilename,style = wx.OK|wx.CANCEL|wx.RESIZE_BORDER)
+            
+            if myDialog.ShowModal()           == wx.ID_OK:
+                ParFilenam_temp = myDialog.GetValue()
+                if(ParFilenam_temp == self.ParFilename):
+                    self.myC.ParList = self.ParList
+                    self.myC.WriteParameterFile()
+                else:
+                    self.myC.ParList = self.ParList
+                    self.myC.SaveNewParameterFile(ParFilenam_temp)
+               
+ 
+        
         # now create the full command line argument 
         #create one long string out of file list
         arg2 =' '

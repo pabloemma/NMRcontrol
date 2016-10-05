@@ -63,7 +63,7 @@ class myControl(object):
     
         
     def WriteParameterFile(self):
-        """ Creates new file with new parameters"""
+        """ Creates new file with new parameters this is used if we want to overwrite the file"""
         
         # delete old file by truncating it to 0
         self.ParFile = open(self.ParameterFile,'w')  # read and write
@@ -79,8 +79,28 @@ class myControl(object):
             self.ParFile.write(templine)
         self.ParFile.close()
         # now we can delete the backup copy
+        print 'wp',self.TempCopy
         os.remove(self.TempCopy)
         
+    def SaveNewParameterFile(self, filename):
+        """ Creates new file with new parameters this is used if we want to overwrite the file"""
+        
+        # delete old file by truncating it to 0
+        self.ParFile1 = open(filename,'w')  # read and write
+        
+        
+        
+        for k in self.ParList:
+            templine =k+'     '+self.ParList[k]+'\n'
+            print k, templine
+            self.ParFile1.write(templine)
+        self.ParFile1.close()
+        # now we can delete the backup copy
+        print 'sp',self.TempCopy
+ 
+        os.remove(self.TempCopy)
+        
+ 
             
     def CreateNMRAna(self):
         """this creates the commandline to be passed to NMRanalyzer,
