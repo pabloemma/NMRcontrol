@@ -6,7 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
-import HelpGUI
+#import HelpGUI
 import NMR
 import threading # we will run the analyzer in a secodn thread
 from copy import  deepcopy
@@ -236,7 +236,8 @@ class MyFrame(wx.Frame):
         self.MyTitleLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,Title,size = (350,75),style = wx.TE_READONLY|wx.TE_MULTILINE) 
         #self.MyTitleLabel.SetLabelMarkup('big')
         # create a wxfont
-        temp_font=wx.Font(15,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_SLANT,wx.FONTSIZE_XX_LARGE )
+        #temp_font=wx.Font(14,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_SLANT,wx.FONTSIZE_XX_LARGE )
+        temp_font=wx.Font(14,wx.FONTFAMILY_SWISS,wx.FONTSTYLE_SLANT,wx.FONTWEIGHT_BOLD)
         temp_font.Scale(1.5)
         temp_font.MakeBold()
         self.MyTitleLabel.SetFont(temp_font)        
