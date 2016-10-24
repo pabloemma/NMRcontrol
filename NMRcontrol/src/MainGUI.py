@@ -6,7 +6,7 @@ Created on Aug 17, 2016
 import wx
 import os
 import AnaControl as ANA
-#import HelpGUI
+import HelpGUI
 import NMR
 import threading # we will run the analyzer in a secodn thread
 from copy import  deepcopy
@@ -61,6 +61,7 @@ class MyFrame(wx.Frame):
         if(filename == None):  # if we give no filename, then we need to assign a dummy string so that the os.path can find file (it expects string)
             filename='dummy'
         if(os.path.isfile(filename)):
+            self.ParFilename=filename
             print "using parameter file " ,self.ParFilename
         else :
             dlg1 = wx.FileDialog(None,"Choose Parameter File")
@@ -449,8 +450,8 @@ class MyFrame(wx.Frame):
          
 
 if __name__ == '__main__':
-    #MyG = MainGUI(redirect = False, filename ="/Users1/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par1" )
-    MyG = MainGUI(redirect = False )
+    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
+    #MyG = MainGUI(redirect = False )
     print " before loop"
     MyG.MainLoop()
     print "After Loop"        
