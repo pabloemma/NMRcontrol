@@ -129,8 +129,8 @@ class MyFrame(wx.Frame):
 
         
         # now create the sizer
+        #self.NewPanelLayout()
         self.PanelLayout()
-        
 
         self.MyPanel.Show()
         #self.ParList = ParList
@@ -139,12 +139,41 @@ class MyFrame(wx.Frame):
         
         
         
+    def NewPanelLayout(self):  
+        """ test for layout of panel
+        """  
+        
+        self.NewSizer = wx.GridBagSizer( hgap = 5, vgap =5)
+        
+        self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
+        rowpos= 0   # for grid sizer , absolute row position (y pos)
+        colpos= 0# absolute column position (x pos)
+        rowspan = 1 # span in y or rows
+        colspan = 4 #span in x or columns
+        
+        wxflag = wx.ALIGN_CENTER_VERTICAL | wx.ALL
+        
+        self.NewSizer.Add(self.MyFileLabel,pos = (rowpos, colpos),span=(rowspan,colspan),flag = wxflag)
+
+        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
+        colpos += 7
+        colspan += 10
+        self.NewSizer.Add(self.MyFileInput,pos = (rowpos,colpos),span=(rowspan,colspan),flag=wxflag)
+
+        
+
         
         
+        self.MyPanel.SetSizer(self.NewSizer)
+       
+        self.MyPanel.Show()
+        #self.Fit()
+
         
+        
+    
     def PanelLayout(self): 
-        """ this lays out the control panel 
-        using sizers"""
+        
         
         # create a grid bag sizer
         self.MySizer = wx.GridBagSizer( hgap = 3, vgap =3)
@@ -153,22 +182,35 @@ class MyFrame(wx.Frame):
         
         
         #Display filename turns out I need to define the size in the tex ctrl box
-        self.MyFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"Parameter File",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
+        self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File",size =(100,25))  # put the variable name from the key
         self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
-
+ 
         #bind textctrl to right click
         self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) 
 
         #self.MyFileInput.Bind(wx.EVT_SET_FOCUS, self.OnFileDialog) 
+        rowpos= 0   # for grid sizer , absolute row position (y pos)
+        colpos= 0# absolute column position (x pos)
+        rowspan = 1 # span in y or rows
+        colspan = 4 #span in x or columns
+        
+        wxflag = wx.ALIGN_CENTER_VERTICAL | wx.ALL
+        
+        self.MySizer.Add(self.MyFileLabel,pos = (rowpos, colpos),span=(rowspan,colspan),flag = wxflag)
 
+        colpos += 7
+        colspan += 10
+        self.MySizer.Add(self.MyFileInput,pos = (rowpos,colpos),span=(rowspan,colspan),flag=wxflag)
+        #self.MySizer.AddGrowableCol(colpos, 10) # make colum4 growable
+        # check for intersctions:
+        if not self.MySizer.CheckForIntersection(self.MySizer.FindItemAtPosition(pos=(rowpos,colpos))):
+            print "Overlap in sizer"
+        self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
+        rowpos = 4
+        colpos = 0
         
+        self.MySizer.Add(self.MyInputFileLabel,pos = (rowpos,colpos),span=(rowspan,colspan))
         
-        self.MySizer.Add(self.MyFileLabel,pos = (0,0),span=(1,4))
-        self.MySizer.Add(self.MyFileInput,pos = (0,4),span=(1,10))
-        self.MySizer.AddGrowableCol(4, 10) # make colum4 growable
- 
-        self.MyInputFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"InputFile",size =(100,25),style = wx.TE_READONLY)  # put the variable name from the key
-        self.MySizer.Add(self.MyInputFileLabel,pos = (1,0),span=(1,4))
         # bind to rght click
         #self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
         FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
@@ -251,16 +293,19 @@ class MyFrame(wx.Frame):
         self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(4,4))
         self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
         self.MySizer.Add(self.MyFileList,pos=(16,0),span=(10,10))
-        self.SetSizerAndFit(self.MySizer)
 
+        
+        self.MyPanel.SetSizer(self.MySizer)
+
+        
+        
+
+        
         
         
         self.Show()
-
-        
-        
-        
         self.Fit()
+ 
         
         # Now bind the actions
 
@@ -273,7 +318,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_RADIOBUTTON,self.OnFileDialogMultiple,FileButton)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)  # create background picture                     
         # now the file dialog
-        
+      
                          
 ##########################################                         
                     
