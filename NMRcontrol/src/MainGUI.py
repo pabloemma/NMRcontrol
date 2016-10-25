@@ -359,8 +359,9 @@ class MyFrame(wx.Frame):
                 else:
                     self.myC.ParList = self.ParList
                     self.myC.SaveNewParameterFile(ParFilenam_temp)
+                    self.ParFilename = ParFilenam_temp
                
- 
+        
         
         # now create the full command line argument 
         #create one long string out of file list
@@ -479,6 +480,8 @@ class MyFrame(wx.Frame):
         full_command = shell_help + ' ; '+self.NMRFull_command
         env = dict(os.environ)
         env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
+        #the previous is due to the fact that going through an IDE, the environmnet is different
+        #it uses the system environment.
         print env['LD_LIBRARY_PATH']," library"
         print env
 
