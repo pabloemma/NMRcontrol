@@ -9,6 +9,7 @@ import AnaControl as ANA
 import HelpGUI
 import NMR
 import threading # we will run the analyzer in a secodn thread
+import subprocess
 from copy import  deepcopy
 #import ParFrame as PF
 
@@ -189,32 +190,35 @@ class MyFrame(wx.Frame):
         self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) 
 
         #self.MyFileInput.Bind(wx.EVT_SET_FOCUS, self.OnFileDialog) 
+        
+        wxflag = wx.ALIGN_CENTER_VERTICAL | wx.ALL
+        
+        #self.MySizer.AddGrowableCol(colpos, 10) # make colum4 growable
+        self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
+        FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
+        
+
+        
+        
         rowpos= 0   # for grid sizer , absolute row position (y pos)
         colpos= 0# absolute column position (x pos)
         rowspan = 1 # span in y or rows
         colspan = 4 #span in x or columns
-        
-        wxflag = wx.ALIGN_CENTER_VERTICAL | wx.ALL
+
         
         self.MySizer.Add(self.MyFileLabel,pos = (rowpos, colpos),span=(rowspan,colspan),flag = wxflag)
-
-        colpos += 7
-        colspan += 10
+        colpos = colspan
         self.MySizer.Add(self.MyFileInput,pos = (rowpos,colpos),span=(rowspan,colspan),flag=wxflag)
-        #self.MySizer.AddGrowableCol(colpos, 10) # make colum4 growable
-        # check for intersctions:
-        if not self.MySizer.CheckForIntersection(self.MySizer.FindItemAtPosition(pos=(rowpos,colpos))):
-            print "Overlap in sizer"
-        self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
-        rowpos = 4
         colpos = 0
-        
+        rowpos = rowpos+rowspan        
         self.MySizer.Add(self.MyInputFileLabel,pos = (rowpos,colpos),span=(rowspan,colspan))
+        colpos = colspan
+        self.MySizer.Add(FileButton,pos = (rowpos,colpos))
+        
+        
         
         # bind to rght click
         #self.MyInputFileLabel.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogMultiple) 
-        FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
-        self.MySizer.Add(FileButton,pos = (1,4))
     
         
         # create the run button
@@ -244,8 +248,8 @@ class MyFrame(wx.Frame):
             self.MyInputArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
             print self.counter+2
             self.MyLabelArray[self.counter].SetBackgroundColour('Yellow')
-            self.MySizer.Add(self.MyLabelArray[self.counter], pos=(3+self.counter,0),span=(1,4))
-            self.MySizer.Add(self.MyInputArray[self.counter], pos=(3+self.counter,4),span=(1,4))
+            self.MySizer.Add(self.MyLabelArray[self.counter], pos=(4+self.counter,0),span=(1,4))
+            self.MySizer.Add(self.MyInputArray[self.counter], pos=(4+self.counter,colspan),span=(rowspan,colspan))
             self.counter = self.counter+1
 
         #control buttons
@@ -309,7 +313,7 @@ class MyFrame(wx.Frame):
         
         # Now bind the actions
 
- #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
+#       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnStopAnalyzer,StopButton)
         
@@ -363,13 +367,13 @@ class MyFrame(wx.Frame):
         arg2 =' '
         for k in range(0,len(self.input_filelist)) :
             arg2=arg2+self.input_filelist[k]+' '
-        self.full_command = self.input_directory +'/ ' +arg2+' -f '+ self.ParFileName
+        self.full_command = self.input_directory +'/ ' +arg2+' -f '+ self.ParFilename
         # create a process dialog
         progress = wx.GenericProgressDialog("NMR progress","still analysing",style=wx.PD_ELAPSED_TIME)
         progress.Show()
         
         # need to put this in a separate thread
-        self.NMRFull_command = "/Users/klein/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
+        self.NMRFull_command = "/home/plm/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
         #os.system(NMRFull_command)
         
         
@@ -457,6 +461,7 @@ class MyFrame(wx.Frame):
         
         
         #create the threads to run
+        print "In run command"
         self.NMRthread.append(threading.Thread(target = self.NMRThreadTarget ))
         
         self.NMRthread[self.NMRthreadcount].start()
@@ -470,13 +475,27 @@ class MyFrame(wx.Frame):
         
     def NMRThreadTarget(self): 
         """ setting up the firts thread""" 
-        try:
+        shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
+        full_command = shell_help + ' ; '+self.NMRFull_command
+        env = dict(os.environ)
+        env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
+        print env['LD_LIBRARY_PATH']," library"
+        print env
 
-            os.system(self.NMRFull_command)
+        print self.NMRFull_command
+
+       
+
+        try:
+            # setup LD_LIBRARY_PATH
+            subprocess.Popen(self.NMRFull_command,shell=True,env=env)   
+            #os.system(self.NMRFull_command)
+            #os.system(full_command)
+            #subprocess.check_call(self.NMRFull_command, env=env)   
         except:
             print " cannot launch NMR thread"
         return   
-             
+            
  ############# the menu items
 
     def OnHelpGui(self,event):
