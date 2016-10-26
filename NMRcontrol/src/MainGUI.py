@@ -54,7 +54,9 @@ class MyFrame(wx.Frame):
     def __init__ (self,parent,id,title, filename):
         print "Frame init"
         #
-        wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (1200,800),style = wx.DEFAULT_FRAME_STYLE)
+        self.panelx=700
+        self.panely=800
+        wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (self.panelx,self.panely),style = wx.DEFAULT_FRAME_STYLE)
         # determine the parent Id so that we can place parameter panel into main panel (hopefully)
         self.MyPanel = wx.Panel(self)
         
@@ -166,7 +168,7 @@ class MyFrame(wx.Frame):
         
         
         self.MyPanel.SetSizer(self.NewSizer)
-       
+        self.MyPanel.SetBackgroundStyle(wx.BG_STYLE_ERASE)
         self.MyPanel.Show()
         #self.Fit()
 
@@ -184,6 +186,7 @@ class MyFrame(wx.Frame):
         
         #Display filename turns out I need to define the size in the tex ctrl box
         self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File",size =(100,25))  # put the variable name from the key
+        self.MyFileLabel.SetForegroundColour((245,245,245)) # see http://www.tayloredmktg.com/rgb/
         self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
  
         #bind textctrl to right click
@@ -195,6 +198,8 @@ class MyFrame(wx.Frame):
         
         #self.MySizer.AddGrowableCol(colpos, 10) # make colum4 growable
         self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
+        self.MyInputFileLabel.SetForegroundColour((245,245,245))
+
         FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
         
 
@@ -249,7 +254,7 @@ class MyFrame(wx.Frame):
             print self.counter+2
             self.MyLabelArray[self.counter].SetBackgroundColour('Yellow')
             self.MySizer.Add(self.MyLabelArray[self.counter], pos=(4+self.counter,0),span=(1,4))
-            self.MySizer.Add(self.MyInputArray[self.counter], pos=(4+self.counter,colspan),span=(rowspan,colspan))
+            self.MySizer.Add(self.MyInputArray[self.counter], pos=(4+self.counter,colspan),span=(rowspan,2))
             self.counter = self.counter+1
 
         #control buttons
@@ -294,8 +299,8 @@ class MyFrame(wx.Frame):
         temp_font.SetFamily(wx.FONTFAMILY_TELETYPE)        
         self.MyVersion.SetBackgroundColour('Pink')
         self.MyVersion.SetFont(temp_font)
-        self.MySizer.Add(self.MyTitleLabel,pos = (4,10),span=(4,4))
-        self.MySizer.Add(self.MyVersion,pos =(8,10),span=(6,4))
+        self.MySizer.Add(self.MyTitleLabel,pos = (4,6),span=(4,4))
+        self.MySizer.Add(self.MyVersion,pos =(8,6),span=(6,4))
         self.MySizer.Add(self.MyFileList,pos=(16,0),span=(10,10))
 
         
@@ -449,9 +454,18 @@ class MyFrame(wx.Frame):
             rect = self.GetUpdateRegion().GetBox()
             dc.SetClippingRect(rect)
         dc.Clear()
-        bmp = wx.Bitmap("IMG_0424.jpg")
-        bmp.SetSize(size=(1200,1400))
-        dc.DrawBitmap(bmp, 0, 0)       
+        #load image
+        img1 = wx.Image("IMG_0424.jpg",wx.BITMAP_TYPE_JPEG)
+        
+        #bmp = wx.Bitmap("IMG_0424.jpg")
+        #scale to size
+         # now scale image
+        img2 = img1.Scale(self.panelx,self.panely)
+        # create bitmapt
+        BitM = wx.BitmapFromImage(img2)
+        #print bmp.GetWidth(), ' ' , bmp.GetHeight()
+#        bmp.SetSize(size=(w/5.,y/5.))
+        dc.DrawBitmap(BitM, 0, 0)       
         
 
     def RunThread(self):
