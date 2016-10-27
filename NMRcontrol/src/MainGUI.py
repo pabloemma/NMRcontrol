@@ -365,7 +365,7 @@ class MyFrame(wx.Frame):
                     self.myC.ParList = self.ParList
                     self.myC.SaveNewParameterFile(ParFilenam_temp)
                     self.ParFilename = ParFilenam_temp
-               
+            myDialog.Destroy()  
         
         
         # now create the full command line argument 
