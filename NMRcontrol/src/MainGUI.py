@@ -26,17 +26,21 @@ class MainGUI(wx.App):
     '''
     This is the top application controlling things
     '''
-    def __init__ (self,redirect=True, filename=None):
+    def __init__ (self,redirect=True, filename=None, EDir = None):
         """ creates the parameters, parameter list is what is contained in parameter file"""
         print "Parameter Frame init"
         self.ParFilename = filename
+        self.EngineDir = EDir
         wx.App.__init__(self,redirect,filename)
 
 
     def OnInit(self): 
-        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename)
+        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename,edir = self.EngineDir)
         print " id of frame",self.frame.GetId()
+
         
+        
+ 
         self.frame.Show()
         # make this the topwindow
         self.SetTopWindow(self.frame)
@@ -51,7 +55,7 @@ class MyFrame(wx.Frame):
     I am trying to get everything into one controll box if possible
     
     """
-    def __init__ (self,parent,id,title, filename):
+    def __init__ (self,parent,id,title, filename,edir):
         print "Frame init"
         #
         self.panelx=700
@@ -80,7 +84,7 @@ class MyFrame(wx.Frame):
         self.ParList = self.myC.ReadParameterFile()
         print "Gui", self.ParList
 
-        
+        self.SetAnaEngineDir(edir)
         
         
         
@@ -379,7 +383,7 @@ class MyFrame(wx.Frame):
         progress.Show()
         
         # need to put this in a separate thread
-        self.NMRFull_command = "/home/plm/git/NMRanalyzer/Debug/NMRana"+ ' ' + self.full_command
+        self.NMRFull_command = self.AnaEngineDir+"NMRana"+ ' ' + self.full_command
         #os.system(NMRFull_command)
         
         
@@ -528,10 +532,14 @@ class MyFrame(wx.Frame):
     def OnHelpAnalyzer(self,event):
         pass
  
-         
+    def SetAnaEngineDir(self,dirname):
+        """ sts directory where engine is"""
+        self.AnaEngineDir = dirname
+            
 
 if __name__ == '__main__':
-    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par" )
+    EngineDir = '/Users/klein/git/NMRanalyzer/Debug/'
+    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",EDir = EngineDir )
     #MyG = MainGUI(redirect = False )
     print " before loop"
     MyG.MainLoop()
