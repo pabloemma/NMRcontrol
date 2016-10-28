@@ -5,6 +5,7 @@ Created on Oct 27, 2016
 '''
 import wx
 import os
+import platform
 
 
 
@@ -49,6 +50,9 @@ verhead to run NMR_short
 
         super(MyShortControl,self).__init__(parent,title=title,style=wx.MINIMIZE_BOX | wx.RESIZE_BORDER | wx.CLOSE_BOX)
         # self.Center() puts panel into the center
+        if platform.system == "Darwin":
+            print" we are on OSX"
+            self.OS = 'OSX'
         
         #Get screen coordinates
         w = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
@@ -62,7 +66,8 @@ verhead to run NMR_short
         posy = 100
         
         #choose input driectory
-        dlg1 = wx.DirDialog(None,"Data Directory")
+        dlg1 = wx.DirDialog(None,"Data Directory",style=wx.VSCROLL | wx.HSCROLL)
+        dlg1.ShowModal()
         if dlg1.ShowModal() == wx.ID_OK:
             self.DataDir = dlg1.GetPath()
             dlg1.Destroy()
@@ -100,8 +105,27 @@ verhead to run NMR_short
         
         self.panel = MyControlPanel(self)
         print posx,posy
-        self.panel.SetPosition((posx,posy))
+        self.panel.Center()
         self.panel.SetBackgroundColour('white')
+        #create a list control
+        self.list_ctrl = wx.ListCtrl(self.panel, size=(-1,100),
+                         style=wx.LC_REPORT | wx.VSCROLL|
+                         wx.BORDER_SUNKEN
+                         )
+        self.list_ctrl.InsertColumn(0, 'Filename')
+        self.list_ctrl.InsertColumn(1, 'Keep?')
+        self.index=0
+        # add lines to list control in column 0
+        for k in range(0,len(self.MyFileList)):
+            self.list_ctrl.InsertStringItem(self.index,self.MyFileList[k])
+            self.index  += 1
+        
+        # change column width
+        self.list_ctrl.SetColumnWidth(0,wx.LIST_AUTOSIZE)
+
+            
+        
+        
         
         
         
