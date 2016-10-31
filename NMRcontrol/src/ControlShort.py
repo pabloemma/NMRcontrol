@@ -50,7 +50,8 @@ verhead to run NMR_short
 
         super(MyShortControl,self).__init__(parent,title=title,style=wx.MINIMIZE_BOX | wx.RESIZE_BORDER | wx.CLOSE_BOX)
         # self.Center() puts panel into the center
-        if platform.system == "Darwin":
+        print "^^^^^^^^^^^^^^^^^^", platform.system()
+        if platform.system() == "Darwin":
             print" we are on OSX"
             self.OS = 'OSX'
         else:
