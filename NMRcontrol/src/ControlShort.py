@@ -79,6 +79,8 @@ verhead to run NMR_short
     
         # now check if the root directory below exists
         self.CheckDirectory()
+        # add fw slash
+        self.DataDir = self.DataDir+'/'
         
         # now get the input files
         
