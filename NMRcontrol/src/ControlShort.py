@@ -113,7 +113,7 @@ verhead to run NMR_short
                          wx.BORDER_SUNKEN
                          )
         self.list_ctrl.InsertColumn(0, 'Filename')
-        self.list_ctrl.InsertColumn(1, 'Keep?')
+        self.list_ctrl.InsertColumn(1, 'Number?')
         self.index=0
         # add lines to list control in column 0
         for k in range(0,len(self.MyFileList)):
