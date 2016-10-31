@@ -8,6 +8,7 @@ import os
 import AnaControl as ANA
 import HelpGUI
 import NMR
+import ControlShort
 import threading # we will run the analyzer in a secodn thread
 import subprocess
 from copy import  deepcopy
@@ -26,16 +27,17 @@ class MainGUI(wx.App):
     '''
     This is the top application controlling things
     '''
-    def __init__ (self,redirect=True, filename=None, EDir = None):
+    def __init__ (self,redirect=True, filename=None, EDir = None, RDir = None):
         """ creates the parameters, parameter list is what is contained in parameter file"""
         print "Parameter Frame init"
         self.ParFilename = filename
         self.EngineDir = EDir
+        self.RunDir = RDir
         wx.App.__init__(self,redirect,filename)
 
 
     def OnInit(self): 
-        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename,edir = self.EngineDir)
+        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename,edir = self.EngineDir,rdir=self.RunDir)
         print " id of frame",self.frame.GetId()
 
         
@@ -55,7 +57,7 @@ class MyFrame(wx.Frame):
     I am trying to get everything into one controll box if possible
     
     """
-    def __init__ (self,parent,id,title, filename,edir):
+    def __init__ (self,parent,id,title, filename,edir,rdir):
         print "Frame init"
         #
         self.panelx=700
@@ -84,7 +86,10 @@ class MyFrame(wx.Frame):
         self.ParList = self.myC.ReadParameterFile()
         print "Gui", self.ParList
 
+
+        #location of the two analysis engines.
         self.SetAnaEngineDir(edir)
+        self.SetRunShortEngineDir(rdir)
         
         
         
@@ -394,11 +399,11 @@ class MyFrame(wx.Frame):
         progress.Show()
         
         # need to put this in a separate thread
-        self.NMRFull_command = self.AnaEngineDir+"NMRana"+ ' ' + self.full_command
+        NMRFull_command = self.AnaEngineDir+"NMRana"+ ' ' + self.full_command
         #os.system(NMRFull_command)
         
         
-        self.RunThread()
+        self.RunThread(NMRFull_command)
     
  
         print 'done with root'
@@ -410,7 +415,33 @@ class MyFrame(wx.Frame):
         print "stop run"
  
     def OnRunConverter(self,event):
-        """ sets up the macihinery for running the converter"""
+        """ sets up the machinery for running the converter. This will again use threads and work
+        itself through a list of input files."""
+        
+        
+        print " in RunConverter"
+        # create an instance of the ControlShort
+        ConShort = ControlShort.MySHC()
+        #MyShCo = ControlShort.MyShortControl
+        print ConShort.MySC.MyFileList
+        # loop over input files
+        for k in range(0,len(ConShort.MySC.MyFileList)):
+            arg2 = '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
+            command = self.RunShortEngineDir +'ReadNMR_short '+arg2 
+            print "***************    ",command
+            self.RunThread(command)
+
+        ConShort.MainLoop()
+        ConShort.Destroy()
+            
+            
+            
+        
+
+        
+        
+        
+        
            
 
        
@@ -485,7 +516,7 @@ class MyFrame(wx.Frame):
         dc.DrawBitmap(BitM, 0, 0)       
         
 
-    def RunThread(self):
+    def RunThread(self,command):
         """ creates the root thread, checks first if there is already one"""
                 #run the thread
                 
@@ -494,7 +525,7 @@ class MyFrame(wx.Frame):
         
         #create the threads to run
         print "In run command"
-        self.NMRthread.append(threading.Thread(target = self.NMRThreadTarget ))
+        self.NMRthread.append(threading.Thread(target = self.NMRThreadTarget(command) ))
         
         self.NMRthread[self.NMRthreadcount].start()
         self.NMRthreadcount = self.NMRthreadcount+1
@@ -505,10 +536,10 @@ class MyFrame(wx.Frame):
         
         
         
-    def NMRThreadTarget(self): 
+    def NMRThreadTarget(self,command): 
         """ setting up the firts thread""" 
         shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
-        full_command = shell_help + ' ; '+self.NMRFull_command
+        full_command = shell_help + ' ; '+command
         env = dict(os.environ)
         env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
         #the previous is due to the fact that going through an IDE, the environmnet is different
@@ -516,13 +547,13 @@ class MyFrame(wx.Frame):
         print env['LD_LIBRARY_PATH']," library"
         print env
 
-        print self.NMRFull_command
+        print command
 
        
 
         try:
             # setup LD_LIBRARY_PATH
-            subprocess.Popen(self.NMRFull_command,shell=True,env=env)   
+            subprocess.Popen(command,shell=True,env=env)   
             #os.system(self.NMRFull_command)
             #os.system(full_command)
             #subprocess.check_call(self.NMRFull_command, env=env)   
@@ -548,11 +579,16 @@ class MyFrame(wx.Frame):
     def SetAnaEngineDir(self,dirname):
         """ sts directory where engine is"""
         self.AnaEngineDir = dirname
+    def SetRunShortEngineDir(self,dirname):
+        """ sts directory where engine is"""
+        self.RunShortEngineDir = dirname
             
 
 if __name__ == '__main__':
     EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",EDir = EngineDir )
+    RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
+    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",
+                     EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
     MyG.MainLoop()

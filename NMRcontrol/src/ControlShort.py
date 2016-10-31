@@ -53,6 +53,8 @@ verhead to run NMR_short
         if platform.system == "Darwin":
             print" we are on OSX"
             self.OS = 'OSX'
+        else:
+            self.OS = 'Linux'
         
         #Get screen coordinates
         w = wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)
@@ -67,7 +69,7 @@ verhead to run NMR_short
         
         #choose input driectory
         dlg1 = wx.DirDialog(None,"Data Directory",style=wx.VSCROLL | wx.HSCROLL)
-        if self.OS :
+        if self.OS == 'OSX' :
             dlg1.ShowModal() #there is an inconsitency between OSX and Linux when it comes to file and dir dialog
         
         if dlg1.ShowModal() == wx.ID_OK:
@@ -81,7 +83,7 @@ verhead to run NMR_short
         # now get the input files
         
         
-        dialog = wx.FileDialog(None, "Choose an inputfile", self.DataDir,"", "*.csv", wx.OPEN | wx.MULTIPLE)
+        dialog = wx.FileDialog(None, "Choose an inputfile", self.DataDir,"", "*.csv",style = wx.OPEN | wx.MULTIPLE)
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
             #self.input_filelist =[]
