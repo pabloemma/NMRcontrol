@@ -268,10 +268,19 @@ class MyFrame(wx.Frame):
         RunButton = wx.Button(self.MyPanel,-1,"Run",)
         RunButton.SetBackgroundColour('Blue')
         RunButton.ClearBackground()
+        
+       
         self.MySizer.Add(RunButton,pos = (4+self.counter,1))
         StopButton = wx.Button(self.MyPanel,-1,"Stop")
         StopButton.SetBackgroundColour('Red')
         self.MySizer.Add(StopButton,pos = (4+self.counter,4))
+
+        # Now set up a button for running the input converter
+        RunConverterButton = wx.Button(self.MyPanel,-1,"Converter",)
+        RunConverterButton.SetBackgroundColour('Green')
+        RunConverterButton.ClearBackground()
+        self.MySizer.Add(RunConverterButton,pos = (1,6))
+
           
         
         #do the parametre list with independent window, but then give the parameters in boxes on main control
@@ -325,7 +334,9 @@ class MyFrame(wx.Frame):
 #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnStopAnalyzer,StopButton)
-        
+
+        self.Bind(wx.EVT_BUTTON,self.OnRunConverter,RunConverterButton)
+         
         self.Bind(wx.EVT_RIGHT_DCLICK,self.OnFileDialogSingle,self.MyFileInput)
         
         self.Bind(wx.EVT_RADIOBUTTON,self.OnFileDialogMultiple,FileButton)
@@ -398,7 +409,9 @@ class MyFrame(wx.Frame):
     def OnStopAnalyzer(self,event):
         print "stop run"
  
-        
+    def OnRunConverter(self,event):
+        """ sets up the macihinery for running the converter"""
+           
 
        
     def OnFileDialogSingle(self,event):
@@ -538,7 +551,7 @@ class MyFrame(wx.Frame):
             
 
 if __name__ == '__main__':
-    EngineDir = '/Users/klein/git/NMRanalyzer/Debug/'
+    EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",EDir = EngineDir )
     #MyG = MainGUI(redirect = False )
     print " before loop"

@@ -67,7 +67,9 @@ verhead to run NMR_short
         
         #choose input driectory
         dlg1 = wx.DirDialog(None,"Data Directory",style=wx.VSCROLL | wx.HSCROLL)
-        dlg1.ShowModal()
+        if self.OS :
+            dlg1.ShowModal() #there is an inconsitency between OSX and Linux when it comes to file and dir dialog
+        
         if dlg1.ShowModal() == wx.ID_OK:
             self.DataDir = dlg1.GetPath()
             dlg1.Destroy()
@@ -93,6 +95,7 @@ verhead to run NMR_short
         print self.MyFileList
         
         
+        
         #now we can run the NMR short with all these files.
         # I just loop ver the command
     
@@ -106,7 +109,7 @@ verhead to run NMR_short
         self.panel = MyControlPanel(self)
         print posx,posy
         self.panel.Center()
-        self.panel.SetBackgroundColour('white')
+        self.panel.SetBackgroundColour('grey')
         #create a list control
         self.list_ctrl = wx.ListCtrl(self.panel, size=(-1,100),
                          style=wx.LC_REPORT | wx.VSCROLL|
