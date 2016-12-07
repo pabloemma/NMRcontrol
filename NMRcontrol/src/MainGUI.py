@@ -12,6 +12,7 @@ import ControlShort
 import threading # we will run the analyzer in a secodn thread
 import subprocess
 from copy import  deepcopy
+import getpass # to chekc for username, only way I can get the shell commands right
 #import ParFrame as PF
 
 
@@ -60,7 +61,7 @@ class MyFrame(wx.Frame):
     def __init__ (self,parent,id,title, filename,edir,rdir):
         print "Frame init"
         #
-        self.panelx=700
+        self.panelx=800
         self.panely=800
         wx.Frame.__init__(self,parent,id,title,pos = (100,100),size = (self.panelx,self.panely),style = wx.DEFAULT_FRAME_STYLE)
         # determine the parent Id so that we can place parameter panel into main panel (hopefully)
@@ -535,13 +536,19 @@ class MyFrame(wx.Frame):
 
         
         
-        
+         
     def NMRThreadTarget(self,command): 
         """ setting up the firts thread""" 
-        shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
+        if (getpass.getuser() =='klein'):
+            shell_help = 'export  LD_LIBRARY_PATH = /Users/klein/root/lib'
+        else:
+            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
         full_command = shell_help + ' ; '+command
         env = dict(os.environ)
-        env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
+        if (getpass.getuser() =='klein'):
+            env['LD_LIBRARY_PATH'] = '/Users/klein/lib'
+        else:
+            env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
         #the previous is due to the fact that going through an IDE, the environmnet is different
         #it uses the system environment.
         print env['LD_LIBRARY_PATH']," library"
@@ -585,9 +592,14 @@ class MyFrame(wx.Frame):
             
 
 if __name__ == '__main__':
-    EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
-    RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/home/plm/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",
+    
+    
+    EngineDir = '/Users/klein/git/NMRanalyzer/Debug/'
+    RunShortEngineDir = '/Users/klein/git/NMR_short/ReadNMR_short/Debug/'
+    
+    #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
+    #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
+    MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"

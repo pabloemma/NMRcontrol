@@ -70,11 +70,12 @@ verhead to run NMR_short
         
         #choose input driectory
         dlg1 = wx.DirDialog(None,"Data Directory",style=wx.VSCROLL | wx.HSCROLL)
-        if self.OS == 'OSX' :
-            dlg1.ShowModal() #there is an inconsitency between OSX and Linux when it comes to file and dir dialog
+        #if self.OS == 'OSX' :
+            #dlg1.ShowModal() #there is an inconsitency between OSX and Linux when it comes to file and dir dialog
         
         if dlg1.ShowModal() == wx.ID_OK:
             self.DataDir = dlg1.GetPath()
+            print "ControlShort", self.DataDir
             dlg1.Destroy()
                 
     
