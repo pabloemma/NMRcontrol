@@ -452,7 +452,7 @@ class MyFrame(wx.Frame):
                         
                         
                         
-                        arg2 = '-b '+ '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
+                        arg2 = '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
                         command = self.RunShortEngineDir +'ReadNMR_short '+arg2 
                         #full_command = shell_help + ' ; '+command
                         
