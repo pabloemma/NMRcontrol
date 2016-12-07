@@ -426,11 +426,53 @@ class MyFrame(wx.Frame):
         #MyShCo = ControlShort.MyShortControl
         print ConShort.MySC.MyFileList
         # loop over input files
-        for k in range(0,len(ConShort.MySC.MyFileList)):
-            arg2 = '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
-            command = self.RunShortEngineDir +'ReadNMR_short '+arg2 
-            print "***************    ",command
-            self.RunThread(command)
+        # check that we do not create too many threads
+        
+ 
+        
+        if (getpass.getuser() =='klein'):
+            shell_help = 'export  LD_LIBRARY_PATH = /Users/klein/root/lib'
+        else:
+            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
+        env = dict(os.environ)
+        if (getpass.getuser() =='klein'):
+            env['LD_LIBRARY_PATH'] = '/Users/klein/lib'
+        else:
+            env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
+        #the previous is due to the fact that going through an IDE, the environmnet is different
+        #it uses the system environment.
+        print env['LD_LIBRARY_PATH']," library"
+        print env
+        
+        
+        if(len(ConShort.MySC.MyFileList)>5):
+                    for k in range(0,len(ConShort.MySC.MyFileList)):
+                        
+                        
+                        
+                        
+                        
+                        arg2 = '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
+                        command = self.RunShortEngineDir +'ReadNMR_short '+arg2 
+                        #full_command = shell_help + ' ; '+command
+                        
+                        print "***************    ",command
+                        
+                        
+                        
+                        
+                        
+                        p = subprocess.Popen(command,shell=True,env=env)   
+                        p.wait()
+                        #self.RunThread(command)
+                        
+        else:
+            
+            for k in range(0,len(ConShort.MySC.MyFileList)):
+                arg2 = '-k'+ConShort.MySC.DataDir +'  -i '+ConShort.MySC.MyFileList[k]
+                command = self.RunShortEngineDir +'ReadNMR_short '+arg2 
+                print "***************    ",command
+                self.RunThread(command)
 
         ConShort.MainLoop()
         ConShort.Destroy()
