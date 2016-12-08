@@ -641,7 +641,7 @@ if __name__ == '__main__':
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_dec6_coil3.par",
+    MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_dec6_coil1.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"

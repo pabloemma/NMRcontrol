@@ -81,6 +81,7 @@ class myControl(object):
         # now we can delete the backup copy
         print 'wp',self.TempCopy
         os.remove(self.TempCopy)
+        os.remove(self.outfil)
         
     def SaveNewParameterFile(self, filename):
         """ Creates new file with new parameters this is used if we want to overwrite the file"""
@@ -99,6 +100,7 @@ class myControl(object):
         print 'sp',self.TempCopy
  
         os.remove(self.TempCopy)
+        os.remove(self.outfil)
         
  
             
