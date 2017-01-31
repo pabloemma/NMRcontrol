@@ -229,7 +229,7 @@ class MyFrame(wx.Frame):
         self.MySizer.Add(self.MyInputFileLabel,pos = (rowpos,colpos),span=(rowspan,colspan))
         colpos = colspan
         self.MySizer.Add(FileButton,pos = (rowpos,colpos))
-        
+        rowpos = rowpos+rowspan
         
         
         # bind to rght click
@@ -320,7 +320,7 @@ class MyFrame(wx.Frame):
         self.MyVersion.SetFont(temp_font)
         self.MySizer.Add(self.MyTitleLabel,pos = (4,6),span=(4,4))
         self.MySizer.Add(self.MyVersion,pos =(8,6),span=(6,4))
-        self.MySizer.Add(self.MyFileList,pos=(16,0),span=(10,10))
+        self.MySizer.Add(self.MyFileList,pos=(25,0),span=(10,10))
 
         
         self.MyPanel.SetSizer(self.MySizer)
@@ -641,7 +641,7 @@ if __name__ == '__main__':
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/Users/klein/git/NMRanalyzer/parameterfiles/test_dec6_coil1.par",
+    MyG = MainGUI(redirect = False, filename ="/Volumes/FastDisk/NMRanalysis/nmrwork/NMR_par/Dec06_coil3_pol.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
