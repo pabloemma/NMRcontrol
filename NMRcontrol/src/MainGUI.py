@@ -431,12 +431,12 @@ class MyFrame(wx.Frame):
  
         
         if (getpass.getuser() =='klein'):
-            shell_help = 'export  LD_LIBRARY_PATH = /Users/klein/root/lib'
+            shell_help = 'export  LD_LIBRARY_PATH = /home/klein/root_all/lib'
         else:
-            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
+            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root_all/lib'
         env = dict(os.environ)
         if (getpass.getuser() =='klein'):
-            env['LD_LIBRARY_PATH'] = '/Users/klein/lib'
+            env['LD_LIBRARY_PATH'] = '/home/klein/root_all/lib'
         else:
             env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
         #the previous is due to the fact that going through an IDE, the environmnet is different
@@ -636,12 +636,12 @@ class MyFrame(wx.Frame):
 if __name__ == '__main__':
     
     
-    EngineDir = '/Users/klein/git/NMRanalyzer/Debug/'
-    RunShortEngineDir = '/Users/klein/git/NMR_short/ReadNMR_short/Debug/'
+    EngineDir = '/home/klein/git/NMRanalyzer/Debug/'
+    RunShortEngineDir = '/home/klein/git/NMR_short/ReadNMR_short/Debug/'
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/Volumes/FastDisk/NMRanalysis/nmrwork/NMR_par/Dec06_coil3_pol.par",
+    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_par/Dec06_coil3_pol.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
