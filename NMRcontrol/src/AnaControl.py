@@ -28,10 +28,10 @@ class myControl(object):
         self.ParList = {}   # this will hold the list of parameters from the parameter file
                             #Later we will change these values in the GUI
         # default run parameters for NMRanalzyer
-        self.arg1 = "/Users/klein/git/NMRanalyzer/Testfiles/"   
+        self.arg1 = "/home/klein/git/NMRanalyzer/Testfiles/"   
         self.arg2 =  "TER3544457259.root"
         self.arg3a  = "-f "
-        self.arg3b = "/Users/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par"
+        self.arg3b = "/home/klein/git/NMRanalyzer/parameterfiles/test_april25_noQcurve.par"
                             
         
         
@@ -81,7 +81,7 @@ class myControl(object):
         # now we can delete the backup copy
         print 'wp',self.TempCopy
         os.remove(self.TempCopy)
-        os.remove(self.outfil)
+        #os.remove(self.outfil)
         
     def SaveNewParameterFile(self, filename):
         """ Creates new file with new parameters this is used if we want to overwrite the file"""

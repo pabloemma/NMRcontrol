@@ -280,6 +280,10 @@ class MyFrame(wx.Frame):
         StopButton = wx.Button(self.MyPanel,-1,"Stop")
         StopButton.SetBackgroundColour('Red')
         self.MySizer.Add(StopButton,pos = (4+self.counter,4))
+        SaveButton = wx.Button(self.MyPanel,-1,"Save Parameter File",)
+        SaveButton.SetBackgroundColour('green')
+        SaveButton.ClearBackground()
+        self.MySizer.Add(SaveButton,pos = (4+self.counter,6))
 
         # Now set up a button for running the input converter
         RunConverterButton = wx.Button(self.MyPanel,-1,"Converter",)
@@ -340,6 +344,7 @@ class MyFrame(wx.Frame):
 #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnStopAnalyzer,StopButton)
+        self.Bind(wx.EVT_BUTTON,self.OnSaveParameterFile,SaveButton)
 
         self.Bind(wx.EVT_BUTTON,self.OnRunConverter,RunConverterButton)
          
@@ -359,7 +364,11 @@ class MyFrame(wx.Frame):
         self.Close(True)
         exit()
     
-
+    def OnSaveParameterFile(self,event):
+        print "save parameter file"
+        self.myC.WriteParameterFile()       
+        
+        
     def OnRunAnalyzer(self,event):
         print "hit run"
         #make sure you get the current parameter list
@@ -641,7 +650,7 @@ if __name__ == '__main__':
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_par/Dec06_coil3_pol.par",
+    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/June29_17.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"

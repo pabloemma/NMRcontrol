@@ -4,7 +4,7 @@ Created on Sep 2, 2016
 @author: klein
 '''
 import wx
-import wx.html2 as html2
+#import wx.html2 as html2
 import webbrowser
 import os
  
