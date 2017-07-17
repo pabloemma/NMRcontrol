@@ -159,6 +159,7 @@ class MyFrame(wx.Frame):
         self.NewSizer = wx.GridBagSizer( hgap = 5, vgap =5)
         
         self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
+        #self.MyFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
         rowpos= 0   # for grid sizer , absolute row position (y pos)
         colpos= 0# absolute column position (x pos)
         rowspan = 1 # span in y or rows
@@ -210,7 +211,9 @@ class MyFrame(wx.Frame):
         self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
         self.MyInputFileLabel.SetForegroundColour((245,245,245))
 
-        FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
+        FileButton = wx.RadioButton(self.MyPanel,-1,"Analyzer")
+
+        #FileButton = wx.Button(self.MyPanel,-1,"Analyzer",)
         
 
         
@@ -366,6 +369,8 @@ class MyFrame(wx.Frame):
     
     def OnSaveParameterFile(self,event):
         print "save parameter file"
+        self.myC.ParList = self.ParList
+
         self.myC.WriteParameterFile()       
         
         
@@ -650,7 +655,7 @@ if __name__ == '__main__':
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/June29_17.par",
+    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/Dec05_coil2_pol.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
