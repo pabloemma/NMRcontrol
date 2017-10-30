@@ -99,7 +99,7 @@ class MainControl(object):
                 stamp = os.stat(self.heart).st_mtime
                 if(stamp != self.last_time):
                         last_time = stamp
-                self.DoActionNew()
+                self.DoActionNew()  
                         
                         
                         
