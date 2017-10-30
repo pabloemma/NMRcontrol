@@ -159,6 +159,7 @@ class MyFrame(wx.Frame):
         self.NewSizer = wx.GridBagSizer( hgap = 5, vgap =5)
         
         self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
+        #self.MyFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
         rowpos= 0   # for grid sizer , absolute row position (y pos)
         colpos= 0# absolute column position (x pos)
         rowspan = 1 # span in y or rows
@@ -210,7 +211,9 @@ class MyFrame(wx.Frame):
         self.MyInputFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"InputFile",size=(100,25))  # put the variable name from the key
         self.MyInputFileLabel.SetForegroundColour((245,245,245))
 
-        FileButton = wx.RadioButton(self.MyPanel,-1,"Choose")
+        FileButton = wx.RadioButton(self.MyPanel,-1,"Analyzer")
+
+        #FileButton = wx.Button(self.MyPanel,-1,"Analyzer",)
         
 
         
@@ -280,6 +283,10 @@ class MyFrame(wx.Frame):
         StopButton = wx.Button(self.MyPanel,-1,"Stop")
         StopButton.SetBackgroundColour('Red')
         self.MySizer.Add(StopButton,pos = (4+self.counter,4))
+        SaveButton = wx.Button(self.MyPanel,-1,"Save Parameter File",)
+        SaveButton.SetBackgroundColour('green')
+        SaveButton.ClearBackground()
+        self.MySizer.Add(SaveButton,pos = (4+self.counter,6))
 
         # Now set up a button for running the input converter
         RunConverterButton = wx.Button(self.MyPanel,-1,"Converter",)
@@ -340,6 +347,7 @@ class MyFrame(wx.Frame):
 #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnStopAnalyzer,StopButton)
+        self.Bind(wx.EVT_BUTTON,self.OnSaveParameterFile,SaveButton)
 
         self.Bind(wx.EVT_BUTTON,self.OnRunConverter,RunConverterButton)
          
@@ -359,7 +367,13 @@ class MyFrame(wx.Frame):
         self.Close(True)
         exit()
     
+    def OnSaveParameterFile(self,event):
+        print "save parameter file"
+        self.myC.ParList = self.ParList
 
+        self.myC.WriteParameterFile()       
+        
+        
     def OnRunAnalyzer(self,event):
         print "hit run"
         #make sure you get the current parameter list
@@ -431,12 +445,12 @@ class MyFrame(wx.Frame):
  
         
         if (getpass.getuser() =='klein'):
-            shell_help = 'export  LD_LIBRARY_PATH = /Users/klein/root/lib'
+            shell_help = 'export  LD_LIBRARY_PATH = /home/klein/root_all/lib'
         else:
-            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
+            shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root_all/lib'
         env = dict(os.environ)
         if (getpass.getuser() =='klein'):
-            env['LD_LIBRARY_PATH'] = '/Users/klein/lib'
+            env['LD_LIBRARY_PATH'] = '/home/klein/root_all/lib'
         else:
             env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
         #the previous is due to the fact that going through an IDE, the environmnet is different
@@ -636,12 +650,12 @@ class MyFrame(wx.Frame):
 if __name__ == '__main__':
     
     
-    EngineDir = '/Users/klein/git/NMRanalyzer/Debug/'
-    RunShortEngineDir = '/Users/klein/git/NMR_short/ReadNMR_short/Debug/'
+    EngineDir = '/home/klein/git/NMRanalyzer/Debug/'
+    RunShortEngineDir = '/home/klein/git/NMR_short/ReadNMR_short/Debug/'
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/Volumes/FastDisk/NMRanalysis/nmrwork/NMR_par/Dec06_coil3_pol.par",
+    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/Dec05_coil2_pol.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
