@@ -3,7 +3,8 @@ Created on Oct 25, 2017
 
 @author: klein
 '''
-
+import  termios
+import  tty
 import os
 import sys 
 import time
@@ -95,18 +96,7 @@ class MainControl(object):
             self.LastAnalyzed = ''
             f.close()
             
-    def OuterLoop(self): 
-        """ this is outer loop, just checking for labview run or stop """   
-        if(os.path.isfile(self.run)  and not os.path.isfile(self.stop)):
-            print self.prompt, "labview is running, checking for hearbeat"
-            self.InnerLoop()
-
-        elif(os.path.isfile(self.run) and os.path.isfile(self.stop)):
-            self.ErrorMessage(' we have both start and stop file, fix this first ')
-            
-        elif( not os.path.isfile(self.run)):
-            print self.prompt,' waiting for Labview'
-        
+       
     def InnerLoop(self):
         """ this is the main inner loop, it will wait for heart beat """
         
@@ -117,53 +107,24 @@ class MainControl(object):
             # check that hearbeat file has been updated
                 stamp = os.stat(self.heart).st_mtime
                 if(stamp != self.last_time):
-                        last_time = stamp
-                self.DoActionNew()  
+                        self.last_time = stamp
+                        self.DoActionNew()  
                         
                         
                         
             else:
                     # wait for wakeup
-                print 'waiting for heartbeat'
+                print 'waiting for heartbeat, hit s for stop '
+                char = self.getch()
+ 
+                if (char == "s"):
+                    print("Stop!, will exit")
+                    exit(0)
+
                 time.sleep(5) # time out for 30 seconds
                 
                 
-    def DoAction(self):  
-        """ this checks if run has been analyzed, and if not will run analyzer engine.
-        There is a master file of analyzed runs. it checks for last entry and sees if there are any newer files.
-        If newer files exist it will analyze them, under the condition that there is an .avg file .
-        The .avg file gets created by Labview when the run is finished. This way we ensure that we are not
-        analyzing runs, which are not finished. the dirctory for the analyzed files is a subdirectory of the cvs 
-        files called root
-        """
-        # check for latest file , but see below.
-        list_of_files = glob.glob(self.directory+'/*') # * means all if need specific format then *.csv
-        print list_of_files
-        latest_file = max(list_of_files, key=os.path.getctime)
-        print latest_file
-        while True:
-            if(latest_file == self.anafile or latest_file == self.heart):
-                print " no changes"
-            else:
-                print latest_file
-                # now check if it is analyzed
-                if(latest_file != self.LastAnalyzed):
-                    print "need to analyze file"
-                    # this is where we need to start analyzer
-                    # however there is still a problem:if we have created more than one file
-                    # since the last update of the analyzed file, currently this will only
-                    # analyze the absolute last one.
-                    #maybe a better way to do is to determine the mtime of the last analyzed
-                    # and then list all the files which have a newer mtime
-                    # exclude the ones w=hich do not have the typical
-                    # 3 characters as starting point.
-                    # in order not to make the list of files longer and longer
-                    # we need to move the csv files into a subdirectory called backup
-                    # that might be the easiest way, the moment a file is analyzed move it to backup
-                else:
-                    print "that file is already analyzed"
-                pass
-        
+          
     def DoActionNew(self):  
         """ this checks if run has been analyzed, and if not will run analyzer engine.
         There is a master file of analyzed runs. it checks for last entry and sees if there are any newer files.
@@ -233,7 +194,16 @@ class MainControl(object):
             print 'last run analyzed ',datetime.datetime.fromtimestamp(mytime).strftime('%Y-%m-%d  @  %H:%M:%SZ')
         
 
-   
+    def getch(self):
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+ 
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch  
         
 
             
