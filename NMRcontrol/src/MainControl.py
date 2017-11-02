@@ -35,7 +35,7 @@ class MainControl(object):
     backup has the raw files after it had been converted.
     
     """
-    def __init__(self,directory, anafile, convert_engine_dir):
+    def __init__(self,directory, anafile, convert_engine_dir, online):
         
         self.prompt = 'MainControl> '
         self.err = '!!!! err err err !!!!!'
@@ -60,6 +60,7 @@ class MainControl(object):
         self.run = self.control_directory+'/lvrun'
         self.stop = self.control_directory+'/lvstop'
         self.heart = self.control_directory+'/lvheart'
+        self.online = online # if this is true it checks for hearbeat
         self.last_time = 0 # time stamp of last time change
         
         self.anafile = self.directory+'/'+anafile  # this is filename, where all the analyzed files get stored
@@ -79,7 +80,8 @@ class MainControl(object):
                 f.seek(-2, os.SEEK_END)     # Jump to the second last byte.
                 while f.read(1) != b"\n":   # Until EOL is found...
                     f.seek(-2, os.SEEK_CUR) # ...jump back the read byte plus one more.
-                self.LastAnalyzed = f.readline()         # Read last line.
+                temp = f.readline()        # Read last line.
+                self.LastAnalyzed = temp.strip('\n')        # Read last line.
                 print "last file analyzed", self.LastAnalyzed
                 f.close()
         else:
@@ -101,8 +103,11 @@ class MainControl(object):
         """ this is the main inner loop, it will wait for heart beat """
         
              #check if labiew is running
-        
         while True:
+            if not (self.online):
+            # manually add to heartbeat, since we are offline
+                os.utime(self.heart) #set herabeat file to current time
+
             if(os.path.isfile(self.heart)):
             # check that hearbeat file has been updated
                 stamp = os.stat(self.heart).st_mtime
@@ -112,16 +117,10 @@ class MainControl(object):
                         
                         
                         
-            else:
+                else:
                     # wait for wakeup
-                print 'waiting for heartbeat, hit s for stop '
-                char = self.getch()
- 
-                if (char == "s"):
-                    print("Stop!, will exit")
-                    exit(0)
-
-                time.sleep(5) # time out for 30 seconds
+                    print 'waiting for heartbeat, seems the NMR is nor running'
+                    time.sleep(10) # time out for 30 seconds
                 
                 
           
@@ -151,17 +150,25 @@ class MainControl(object):
         list_of_files = glob.glob('*.csv')
         for myfile in list_of_files:
             # analyze files
-            f.write(myfile) #append to analyzed
             #now strip extension
-            temp=myfile[0:len(myfile)-4]
+            if(myfile != self.LastAnalyzed):
+                temp=myfile[0:len(myfile)-4]
 
-            arg2 = '-k'+self.directory +'/  -i '+temp
-            command = self.convert_engine_dir +'ReadNMR_short '+arg2 
-            print "***************    ",command
-            os.system(command)
+                arg2 = '-k'+self.directory +'/  -i '+temp
+                command = self.convert_engine_dir +'ReadNMR_short '+arg2 
+                print "***************    ",command
+                os.system(command)
 
             
-            shutil.move(self.directory+'/'+myfile , self.backup_directory+'/'+myfile) # move raw file to backup
+                shutil.move(self.directory+'/'+myfile , self.backup_directory+'/'+myfile) # move raw file to backup
+                f.write(myfile) #append to analyzed
+                f.write('\n')
+                self.LastAnalyzed = myfile
+                self.GetDate()
+            else:
+                shutil.move(self.directory+'/'+myfile , self.backup_directory+'/'+myfile) # move raw file to backup
+               
+
         f.close()
             
         
@@ -182,7 +189,7 @@ class MainControl(object):
     def GetDate(self): 
         temp =self.LastAnalyzed[0:3]
         
-        if(temp != 'TEQ' or temp != 'POL' or temp != 'QCV'):
+        if not (temp == "TEQ" or temp == "POL" or temp == "QCV"):
             return
         else:
             datestring = self.CreateTime(self.LastAnalyzed)
@@ -194,16 +201,6 @@ class MainControl(object):
             print 'last run analyzed ',datetime.datetime.fromtimestamp(mytime).strftime('%Y-%m-%d  @  %H:%M:%SZ')
         
 
-    def getch(self):
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
- 
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch  
         
 
             
@@ -224,7 +221,8 @@ if __name__ == '__main__':
     ana_dir = '/Users/klein/labviewtest'
     ana_name = 'analyzed_files.txt'
     convert_engine_dir = '/Users/klein/git/NMR_short/ReadNMR_short/Debug/'
-    MS = MainControl(ana_dir,ana_name,convert_engine_dir)
+    online = True
+    MS = MainControl(ana_dir,ana_name,convert_engine_dir,online)
     MS.LastRun()
     MS.GetDate()
     MS.InnerLoop()
