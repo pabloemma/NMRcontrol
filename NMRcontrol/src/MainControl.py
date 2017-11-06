@@ -3,8 +3,10 @@ Created on Oct 25, 2017
 
 @author: klein
 '''
-import  termios
+#import  termios
 import  tty
+import platform
+import getpass
 import os
 import sys 
 import time
@@ -218,9 +220,18 @@ class MainControl(object):
 
 
 if __name__ == '__main__':
-    ana_dir = '/Users/klein/labviewtest'
+    # first detect opearting system
+    # on MAC the home directory is /Users/name
+    # on linux it is /home/name
+    if(platform.system == 'Linux'):
+        home='/home/'+getpass.getuser()+'/'
+    else:
+        home='/Users/'+getpass.getuser()+'/'
+    
+    
+    ana_dir = home+'labviewtest'
     ana_name = 'analyzed_files.txt'
-    convert_engine_dir = '/Users/klein/git/NMR_short/ReadNMR_short/Debug/'
+    convert_engine_dir = home+'git/NMR_short/ReadNMR_short/Debug/'
     online = True
     MS = MainControl(ana_dir,ana_name,convert_engine_dir,online)
     MS.LastRun()
