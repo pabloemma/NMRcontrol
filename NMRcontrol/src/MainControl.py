@@ -223,7 +223,7 @@ if __name__ == '__main__':
     # first detect opearting system
     # on MAC the home directory is /Users/name
     # on linux it is /home/name
-    if(platform.system == 'Linux'):
+    if(platform.system() == 'Linux'):
         home='/home/'+getpass.getuser()+'/'
     else:
         home='/Users/'+getpass.getuser()+'/'

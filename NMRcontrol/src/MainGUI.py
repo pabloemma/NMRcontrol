@@ -5,6 +5,7 @@ Created on Aug 17, 2016
 '''
 import wx
 import os
+import platform
 import AnaControl as ANA
 import HelpGUI
 import NMR
@@ -28,17 +29,20 @@ class MainGUI(wx.App):
     '''
     This is the top application controlling things
     '''
-    def __init__ (self,redirect=True, filename=None, EDir = None, RDir = None):
+    def __init__ (self,redirect=True, filename=None, EDir = None, RDir = None, ENV=None):
         """ creates the parameters, parameter list is what is contained in parameter file"""
         print "Parameter Frame init"
         self.ParFilename = filename
         self.EngineDir = EDir
         self.RunDir = RDir
+        if(ENV != ''):
+            self.NMR_ROOT=ENV  
+        print self.NMR_ROOT 
         wx.App.__init__(self,redirect,filename)
 
 
     def OnInit(self): 
-        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename,edir = self.EngineDir,rdir=self.RunDir)
+        self.frame = MyFrame(parent=None,id=-1,title= "NMR control", filename = self.ParFilename,edir = self.EngineDir,rdir=self.RunDir,env=self.NMR_ROOT)
         print " id of frame",self.frame.GetId()
 
         
@@ -58,7 +62,7 @@ class MyFrame(wx.Frame):
     I am trying to get everything into one controll box if possible
     
     """
-    def __init__ (self,parent,id,title, filename,edir,rdir):
+    def __init__ (self,parent,id,title, filename,edir,rdir,env):
         print "Frame init"
         #
         self.panelx=800
@@ -91,7 +95,7 @@ class MyFrame(wx.Frame):
         #location of the two analysis engines.
         self.SetAnaEngineDir(edir)
         self.SetRunShortEngineDir(rdir)
-        
+        self.NMR_ROOT=env
         
         
 
@@ -610,6 +614,12 @@ class MyFrame(wx.Frame):
         print env['LD_LIBRARY_PATH']," library"
         print env
 
+
+        print "setting up environment"
+        #os.putenv('NMR_ROOT','/test/andi')
+        #Check for 
+        env['NMR_ROOT'] =self.NMR_ROOT
+
         print command
 
        
@@ -649,14 +659,25 @@ class MyFrame(wx.Frame):
 
 if __name__ == '__main__':
     
-    
+    # check for NMR_ROOT
+    if(os.getenv('NMR_ROOT')==None):
+        print ' no NMR_ROOT defined, enter it now'
+        if(platform.system() == 'Linux'):
+            en='/home/'+getpass.getuser()+'/nmrwork/'
+        else:
+            en='/Users/'+getpass.getuser()+'/nmrwork/'
+
+    else:
+        en=os.getenv('NMR_ROOT')
+        
+    print 'NMR_RROT',en  
     EngineDir = '/home/klein/git/NMRanalyzer/Debug/'
     RunShortEngineDir = '/home/klein/git/NMR_short/ReadNMR_short/Debug/'
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
     MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/Dec05_coil2_pol.par",
-                     EDir = EngineDir, RDir = RunShortEngineDir)
+                     EDir = EngineDir, RDir = RunShortEngineDir , ENV=en)
     #MyG = MainGUI(redirect = False )
     print " before loop"
     MyG.MainLoop()
