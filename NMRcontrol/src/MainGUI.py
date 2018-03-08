@@ -201,7 +201,8 @@ class MyFrame(wx.Frame):
         self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
  
         #bind textctrl to right click
-        self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) 
+        self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) # bring up file dialog when right clicked
+        self.MyFileInput.Bind(wx.EVT_TEXT_ENTER, self.OnFilePressedEnter) # save new file name
 
         #self.MyFileInput.Bind(wx.EVT_SET_FOCUS, self.OnFileDialog) 
         
@@ -343,6 +344,7 @@ class MyFrame(wx.Frame):
  
         
         # Now bind the actions
+        # bind the textinpout on the par file line
 
 #       self.Bind(wx.EVT_RADIOBUTTON,self.OnRunAnalyzer,RunButton)
         self.Bind(wx.EVT_BUTTON,self.OnRunAnalyzer,RunButton)
@@ -372,6 +374,10 @@ class MyFrame(wx.Frame):
         self.myC.ParList = self.ParList
 
         self.myC.WriteParameterFile()       
+     
+    def OnFilePressedEnter(self,event): 
+        temp = event.GetString()
+        print" the new filename is" , temp  
         
         
     def OnRunAnalyzer(self,event):
@@ -596,13 +602,13 @@ class MyFrame(wx.Frame):
     def NMRThreadTarget(self,command): 
         """ setting up the firts thread""" 
         if (getpass.getuser() =='klein'):
-            shell_help = 'export  LD_LIBRARY_PATH = /Users/klein/root/lib'
+            shell_help = 'export  LD_LIBRARY_PATH = /home/klein/root_all/lib'
         else:
             shell_help = 'export  LD_LIBRARY_PATH = /home/plm/root/lib'
         full_command = shell_help + ' ; '+command
         env = dict(os.environ)
         if (getpass.getuser() =='klein'):
-            env['LD_LIBRARY_PATH'] = '/Users/klein/lib'
+            env['LD_LIBRARY_PATH'] = '/home/klein/lib'
         else:
             env['LD_LIBRARY_PATH'] = '/home/plm/root/lib'
         #the previous is due to the fact that going through an IDE, the environmnet is different
@@ -655,7 +661,7 @@ if __name__ == '__main__':
     
     #EngineDir = '/home/plm/git/NMRanalyzer/Debug/'
     #RunShortEngineDir = '/home/plm/git/NMR_short/ReadNMR_short/Debug/'
-    MyG = MainGUI(redirect = False, filename ="/home/klein/NMRanalysis/nmrwork/NMR_Par/Dec05_coil2_pol.par",
+    MyG = MainGUI(redirect = False, filename ="/home/klein/macsmall_disk/nmrwork/NMR_Par/Jan15_coil2_pol.par",
                      EDir = EngineDir, RDir = RunShortEngineDir)
     #MyG = MainGUI(redirect = False )
     print " before loop"
