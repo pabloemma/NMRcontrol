@@ -68,6 +68,7 @@ class MyFrame(wx.Frame):
         self.MyPanel = wx.Panel(self)
         
         #Instantiate my control, first check if there is a parameter file defined.
+        
         if(filename == None):  # if we give no filename, then we need to assign a dummy string so that the os.path can find file (it expects string)
             filename='dummy'
         if(os.path.isfile(filename)):
