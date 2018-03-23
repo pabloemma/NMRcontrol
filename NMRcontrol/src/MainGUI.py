@@ -67,6 +67,8 @@ class MyFrame(wx.Frame):
         # determine the parent Id so that we can place parameter panel into main panel (hopefully)
         self.MyPanel = wx.Panel(self)
         
+        
+        
         #Instantiate my control, first check if there is a parameter file defined.
         
         if(filename == None):  # if we give no filename, then we need to assign a dummy string so that the os.path can find file (it expects string)
@@ -637,6 +639,7 @@ class MyFrame(wx.Frame):
         """ give help on how to use the Control"""
         #open a panel
         print "help gui"
+ 
         MyGH = HelpGUI.MyGuiApp(redirect = False) 
         MyGH.MainLoop()       
 
@@ -644,6 +647,8 @@ class MyFrame(wx.Frame):
         pass
  
     def OnHelpAnalyzer(self,event):
+        MyGH1 = HelpGUI.MyGuiApp1(redirect = False) 
+        MyGH1.MainLoop()       
         pass
  
     def SetAnaEngineDir(self,dirname):
