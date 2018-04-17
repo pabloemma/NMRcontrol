@@ -541,6 +541,8 @@ class MyFrame(wx.Frame):
             dialog.GetPath() 
             #self.input_filelist =[]
             filelist= dialog.GetPaths()
+            directory=os.path.dirname(filelist[0])
+            self.input_directory = directory
             # the next step is in for historical reasons, the C++ program wants one directory and then all
             # the filenames. So firts I have to strip the directory out again
             
