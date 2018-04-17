@@ -533,7 +533,10 @@ class MyFrame(wx.Frame):
             directory = self.input_directory 
        
 
-        dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.OPEN | wx.MULTIPLE)
+        dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.FD_OPEN | wx.FD_MULTIPLE)
+        if dialog.ShowModal() == wx.ID_CANCEL:
+            return     # the user changed their mind
+       
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
             #self.input_filelist =[]
@@ -547,7 +550,8 @@ class MyFrame(wx.Frame):
             for temp in range(0,len(filelist)):
                 self.input_filelist.append(filelist[temp].replace(directory+'/',''))
                 print self.input_filelist[temp]
-                self.MyFileList.InsertStringItem(temp+1,self.input_filelist[temp])
+                #self.MyFileList.InsertStringItem(temp+1,self.input_filelist[temp])
+                self.MyFileList.InsertItem(temp+1,self.input_filelist[temp])
                 #self.MyFileList.SetStringItem()
             # now update list control
 
