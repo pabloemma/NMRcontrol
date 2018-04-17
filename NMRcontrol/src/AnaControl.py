@@ -42,7 +42,8 @@ class myControl(object):
         
 
         
-        self.TempCopy = self.ParameterFile+'_'+str(time.time()) # Create a backup copy with the current time added
+        #self.TempCopy = self.ParameterFile+'_'+str(time.time()) # Create a backup copy with the current time added
+        self.TempCopy = self.ParameterFile+'_bck' # Create a backup copy 
         print "Backup Copy of parameter file: " , self.TempCopy
         
         self.outfil = open(self.TempCopy,'w') 
