@@ -201,8 +201,8 @@ class MyFrame(wx.Frame):
         #Display filename turns out I need to define the size in the tex ctrl box
         self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File",size =(100,25))  # put the variable name from the key
         self.MyFileLabel.SetForegroundColour((245,245,245)) # see http://www.tayloredmktg.com/rgb/
-        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
- 
+
+        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER | wx.TE_PROCESS_TAB)
         #bind textctrl to right click
         self.MyFileInput.Bind(wx.EVT_RIGHT_DOWN, self.OnFileDialogSingle) # bring up file dialog when right clicked
         self.MyFileInput.Bind(wx.EVT_TEXT_ENTER, self.OnFilePressedEnter) # save new file name
