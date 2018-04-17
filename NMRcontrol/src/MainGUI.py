@@ -7,6 +7,7 @@ import wx
 import os
 import AnaControl as ANA
 import HelpGUI
+import HelpGUI1
 import NMR
 import ControlShort
 import threading # we will run the analyzer in a secodn thread
@@ -651,7 +652,7 @@ class MyFrame(wx.Frame):
         pass
  
     def OnHelpAnalyzer(self,event):
-        MyGH1 = HelpGUI.MyGuiApp1(redirect = False) 
+        MyGH1 = HelpGUI1.MyGuiApp1(redirect = False) 
         MyGH1.MainLoop()       
         pass
  

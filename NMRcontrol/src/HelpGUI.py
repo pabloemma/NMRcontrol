@@ -19,7 +19,7 @@ class MyGuiApp(wx.App):
                 # instantitae ANA
         
         self.MyHG = MyHelpGUI(None,"helper window")
-        self.MyHG.Show()
+        #self.MyHG.Show()
         print "oninit"
         return True
 
@@ -47,7 +47,7 @@ class MyPanel(wx.Panel):
         super(MyPanel,self).__init__(parent)
         
         
-        self.button = wx.Button(self,label="press me")
+        #self.button = wx.Button(self,label="press me")
         #find location of the files:
         filename = 'GUI_help.htm'
         print "current dir " ,os.getcwd()

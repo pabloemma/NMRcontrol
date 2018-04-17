@@ -25,7 +25,7 @@ class MyGuiApp1(wx.App):
                 # instantitae ANA
         
         self.MyHG = MyHelpGUI(None,"helper window")
-        self.MyHG.Show()
+        #self.MyHG.Show()
         print "oninit"
         return True
 
@@ -78,5 +78,5 @@ class MyPanel(wx.Panel):
 
 
 if __name__ == '__main__':
-    MyGH = MyGuiApp(redirect = False) 
+    MyGH = MyGuiApp1(redirect = False) 
     MyGH.MainLoop()   
