@@ -5,7 +5,7 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 4.3.3.2 (Linux)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2018-03-08T15:28:47.019525026"/>
+	<meta name="changed" content="2018-04-17T07:47:47.292879211"/>
 	<meta name="Originator" content="Microsoft Word 14"/>
 	<meta name="ProgId" content="Word.Document"/>
 	<meta name="Title" content=""/>
@@ -418,6 +418,31 @@ you want. Those files will show up in “input files window”</p>
 you are done , hit run and it should start working. Currently the
 stop button does not do anything since I do not want to exit with a
 kill.</p>
+<p><br/>
+<br/>
+
+</p>
+<p style="margin-top: 0.17in; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt">Installation:</font></font></p>
+<p>There are three packages:</p>
+<ol>
+	<li/>
+<p>NMRcontrol, which is written in python and provides a
+	graphical interface to both converter and analyzer. This is referred
+	to as the GUI</p>
+	<li/>
+<p>ReadNMR_short which converts the csv files into root files</p>
+	<li/>
+<p>NMRanalyzer, which analyzes the whole NMR data files.</p>
+</ol>
+<p>In order to maintain the packages, they are under git control on
+<a href="https://github.com/pabloemma">https://github.com/pabloemma</a>
+. The easiest way to maintain this is with eclipse, together with
+egit. However, you can just check it out with the usual git command.
+In order to ensure that NMRanalyzer is installed correctly , I
+provide a testenv directory, which has a tgz file in it.  This file
+has all the necessary dierctories to setup your NMR_ROOT environment
+and one data directory with a TE measurement in it. This should
+hoepfully get you going.</p>
 <p><br/>
 <br/>
 
