@@ -516,7 +516,7 @@ class MyFrame(wx.Frame):
         """ If I hit tab in file input it opens file dialog, selects only one file"""
         wildcard = "*.par|*.*"
 
-        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
+        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.FD_OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             print dialog.GetPath() 
             self.ParFileName = dialog.GetPath()
@@ -525,18 +525,17 @@ class MyFrame(wx.Frame):
     def OnFileDialogMultiple(self,event):
         """ If I hit tab in file input it opens file dialog, selects only one file"""
         #make sure not to have spaces in the wildcard definition.
-        wildcard = "Root files (*.root)|*.root"
+        #wildcard = "Root files (*.root)|*.root"
 
-        dialog =wx.DirDialog(None, "Choose an inputdirctory")
-        if dialog.ShowModal() == wx.ID_OK:
+        #dialog =wx.DirDialog(None, "Choose an inputdirctory")
+        #if dialog.ShowModal() == wx.ID_OK:
              
-            self.input_directory=dialog.GetPath() 
-            directory = self.input_directory 
+        #    self.input_directory=dialog.GetPath() 
+        #    directory = self.input_directory 
        
 
-        dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.FD_OPEN | wx.FD_MULTIPLE)
-        if dialog.ShowModal() == wx.ID_CANCEL:
-            return     # the user changed their mind
+        #dialog = wx.FileDialog(None, "Choose an inputfile", directory, "", wildcard, wx.FD_OPEN | wx.FD_MULTIPLE)
+        dialog = wx.FileDialog(None, "Choose an inputfile", defaultDir="", wildcard="*.root", style =wx.FD_OPEN | wx.FD_MULTIPLE)
        
         if dialog.ShowModal() == wx.ID_OK:
             dialog.GetPath() 
