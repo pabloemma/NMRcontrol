@@ -237,10 +237,13 @@ class MyFrame(wx.Frame):
 #            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
             self.ParName = wx.TextCtrl(self.MyPanel, wx.ID_ANY, k,style = wx.TE_READONLY | wx.TE_LEFT)
             self.MyLabelArray.append(self.ParName)
+            
             self.ParInput=wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER )  # put the variable name from the key
             #self.ParName.Bind(wx.EVT_LEFT_DOWN,self.OnParameterEnter)
             self.ParInput.Bind(wx.EVT_TEXT_ENTER,self.OnParameterEnter)
             self.MyInputArray.append(self.ParInput)
+           
+            
 #            self.MyInputArray.append(self.ParInput=wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
             print self.counter+2
             self.MyLabelArray[self.counter].SetBackgroundColour('Yellow')
