@@ -146,7 +146,6 @@ class MyFrame(wx.Frame):
 
         
         # now create the sizer
-        #self.NewPanelLayout()
         self.PanelLayout()
 
         self.MyPanel.Show()
@@ -156,37 +155,6 @@ class MyFrame(wx.Frame):
         
         
         
-    def NewPanelLayout(self):  
-        """ test for layout of panel
-        """  
-        
-        self.NewSizer = wx.GridBagSizer( hgap = 5, vgap =5)
-        
-        self.MyFileLabel = wx.StaticText(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
-        #self.MyFileLabel = wx.TextCtrl(self.MyPanel, wx.ID_ANY,"Parameter File")  # put the variable name from the key
-        rowpos= 0   # for grid sizer , absolute row position (y pos)
-        colpos= 0# absolute column position (x pos)
-        rowspan = 1 # span in y or rows
-        colspan = 4 #span in x or columns
-        
-        wxflag = wx.ALIGN_CENTER_VERTICAL | wx.ALL
-        
-        self.NewSizer.Add(self.MyFileLabel,pos = (rowpos, colpos),span=(rowspan,colspan),flag = wxflag)
-
-        self.MyFileInput = wx.TextCtrl(self.MyPanel, wx.ID_ANY,self.ParFilename ,size=(500,25),style = wx.TE_PROCESS_ENTER|wx.TE_AUTO_SCROLL | wx.TE_PROCESS_TAB)
-        colpos += 7
-        colspan += 10
-        self.NewSizer.Add(self.MyFileInput,pos = (rowpos,colpos),span=(rowspan,colspan),flag=wxflag)
-
-        
-
-        
-        
-        self.MyPanel.SetSizer(self.NewSizer)
-        self.MyPanel.SetBackgroundStyle(wx.BG_STYLE_ERASE)
-        self.MyPanel.Show()
-        #self.Fit()
-
         
         
     
@@ -267,8 +235,13 @@ class MyFrame(wx.Frame):
             print k
             #store in original list
 #            self.MyLabelArray.append(wx.StaticText(self.panel, wx.ID_ANY, k))  # put the variable name from the key
-            self.MyLabelArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, k,style = wx.TE_READONLY))  # put the variable name from the key
-            self.MyInputArray.append(wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
+            self.ParName = wx.TextCtrl(self.MyPanel, wx.ID_ANY, k,style = wx.TE_READONLY | wx.TE_LEFT)
+            self.MyLabelArray.append(self.ParName)
+            self.ParInput=wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER )  # put the variable name from the key
+            #self.ParName.Bind(wx.EVT_LEFT_DOWN,self.OnParameterEnter)
+            self.ParInput.Bind(wx.EVT_TEXT_ENTER,self.OnParameterEnter)
+            self.MyInputArray.append(self.ParInput)
+#            self.MyInputArray.append(self.ParInput=wx.TextCtrl(self.MyPanel, wx.ID_ANY, self.ParList[k],style = wx.TE_PROCESS_ENTER ))
             print self.counter+2
             self.MyLabelArray[self.counter].SetBackgroundColour('Yellow')
             self.MySizer.Add(self.MyLabelArray[self.counter], pos=(4+self.counter,0),span=(1,4))
@@ -279,6 +252,7 @@ class MyFrame(wx.Frame):
         #stop does not do anything yet
         
         #RunButton = wx.RadioButton(self.MyPanel,-1,"Run")
+        # bind the patarmeter input to event
         RunButton = wx.Button(self.MyPanel,-1,"Run",)
         RunButton.SetBackgroundColour('Blue')
         RunButton.ClearBackground()
@@ -380,8 +354,8 @@ class MyFrame(wx.Frame):
         self.myC.WriteParameterFile()       
      
     def OnFilePressedEnter(self,event): 
-        temp = event.GetString()
-        print" the new filename is" , temp  
+        self.ParFilename = event.GetString()
+        print" the new filename is" , self.ParFilename  
         
         
     def OnRunAnalyzer(self,event):
@@ -434,7 +408,10 @@ class MyFrame(wx.Frame):
         print 'done with root'
         progress.Destroy()
         
-        
+    def OnParameterEnter(self,event): 
+        print "parameter enter event"
+        print event.Value()
+        #print self.ParName.GetValue() 
         
     def OnStopAnalyzer(self,event):
         print "stop run"
@@ -519,7 +496,7 @@ class MyFrame(wx.Frame):
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.FD_OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             print dialog.GetPath() 
-            self.ParFileName = dialog.GetPath()
+            self.ParFilename = dialog.GetPath()
         dialog.Destroy()
 
     def OnFileDialogMultiple(self,event):
